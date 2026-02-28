@@ -5,12 +5,12 @@ const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
 const Contact = () => {
   const handleWhatsApp = () => {
-    const url = `https://wa.me/919999999999?text=${encodeURIComponent("Hi, I'd like to enquire about MYNT Girlfriend services.")}`;
+    const url = `https://wa.me/919999999999?text=${encodeURIComponent("Hi, I'd like to enquire about Mynt Girlfriend services.")}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleEmail = () => {
-    window.location.href = "mailto:contact@myntgirlfriend.com?subject=" + encodeURIComponent("Enquiry - MYNT Girlfriend");
+    window.location.href = "mailto:contact@myntgirlfriend.com?subject=" + encodeURIComponent("Enquiry - Mynt Girlfriend");
   };
 
   const handlePhone = () => {
@@ -24,18 +24,17 @@ const Contact = () => {
           <div className="text-center mb-14">
             <p className="font-elegant text-sm tracking-[0.3em] uppercase text-primary/50 mb-3">Get in Touch</p>
             <h1 className="font-display text-4xl md:text-5xl tracking-wider text-primary">Contact Us</h1>
-            <p className="font-elegant text-base text-primary/40 mt-3">Reach out for a private and confidential consultation</p>
             <div className="gold-divider w-20 mx-auto mt-4" />
+            <p className="font-elegant text-base text-primary/40 mt-4 max-w-lg mx-auto">
+              Ready to book, enquire, or receive a tailored consultation? Reach out via WhatsApp or email for a confidential consultation experience.
+            </p>
           </div>
         </FadeInSection>
 
         {/* 3 CTAs */}
         <FadeInSection delay={0.2}>
           <div className="grid md:grid-cols-3 gap-5 mb-16">
-            <button
-              onClick={handleWhatsApp}
-              className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer"
-            >
+            <button onClick={handleWhatsApp} className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
               <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:border-primary/60 transition-colors">
                 <MessageCircle className="w-6 h-6 text-primary" />
               </div>
@@ -43,10 +42,7 @@ const Contact = () => {
               <p className="font-elegant text-sm text-primary/40">Chat with us instantly</p>
             </button>
 
-            <button
-              onClick={handleEmail}
-              className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer"
-            >
+            <button onClick={handleEmail} className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
               <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:border-primary/60 transition-colors">
                 <Mail className="w-6 h-6 text-primary" />
               </div>
@@ -54,10 +50,7 @@ const Contact = () => {
               <p className="font-elegant text-sm text-primary/40">contact@myntgirlfriend.com</p>
             </button>
 
-            <button
-              onClick={handlePhone}
-              className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer"
-            >
+            <button onClick={handlePhone} className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer hover:-translate-y-1 transition-transform duration-300">
               <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:border-primary/60 transition-colors">
                 <Phone className="w-6 h-6 text-primary" />
               </div>

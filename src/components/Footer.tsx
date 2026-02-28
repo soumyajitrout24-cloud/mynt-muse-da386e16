@@ -3,15 +3,14 @@ import { MapPin, Mail, Phone } from "lucide-react";
 
 const footerLinks = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
+  { label: "About Us", path: "/about" },
   { label: "Services", path: "/services" },
-  { label: "Gallery", path: "/gallery" },
-  { label: "Profiles", path: "/profiles" },
-  { label: "Pricing", path: "/pricing" },
+  { label: "Gallery & Profiles", path: "/gallery" },
+  { label: "Pricing & Plans", path: "/pricing" },
+  { label: "Booking Policy", path: "/booking-policy" },
+  { label: "FAQs", path: "/faq" },
   { label: "Testimonials", path: "/testimonials" },
   { label: "Contact", path: "/contact" },
-  { label: "FAQ", path: "/faq" },
-  { label: "Booking Policy", path: "/booking-policy" },
 ];
 
 const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
@@ -19,18 +18,16 @@ const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 const Footer = () => {
   return (
     <footer className="bg-card border-t-2 border-primary/30 pt-14 pb-8">
-      {/* Gold top accent line */}
       <div className="gold-divider w-full mb-10 opacity-40" />
 
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-10 mb-10">
           {/* Brand */}
           <div>
-            <h3 className="font-display text-2xl tracking-[0.2em] text-primary gold-glow mb-2">
-              MYNT
+            <h3 className="font-display text-2xl tracking-[0.15em] text-primary gold-glow mb-2">
+              Mynt Girlfriend
             </h3>
-            <p className="font-elegant italic text-lg tracking-wider text-primary/60 mb-4">Girlfriend</p>
-            <p className="font-elegant text-sm text-primary/40 leading-relaxed">
+            <p className="font-elegant text-sm text-primary/40 leading-relaxed mt-3">
               Elite Indian Model & Companion Service. Where elegance meets excellence.
             </p>
           </div>
@@ -95,7 +92,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="gold-divider w-full mb-6" />
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="font-body text-[10px] tracking-[0.15em] text-primary/25 uppercase">

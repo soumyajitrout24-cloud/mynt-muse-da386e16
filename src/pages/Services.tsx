@@ -4,29 +4,24 @@ import FadeInSection from "@/components/FadeInSection";
 
 const services = [
   {
-    title: "Corporate Events",
-    description: "Professional models for corporate events, conferences, product launches, and brand activations. Our models are trained in etiquette and professional conduct.",
-    features: ["Product launches", "Trade shows", "Conferences", "Networking events"],
+    title: "Elite Companion Experiences",
+    description: "Whether for special occasions, private events, social evenings, or personal engagements — our companions add grace, elegance, and presence that elevate your experience.",
+    features: ["Special occasions", "Private events", "Social evenings", "Personal engagements"],
   },
   {
-    title: "Brand Ambassadors",
-    description: "Represent your brand with elegance. Our brand ambassadors create lasting impressions through their poise, communication skills, and professional demeanor.",
-    features: ["In-store promotions", "Brand campaigns", "Social media", "Public appearances"],
+    title: "Event & Social Engagements",
+    description: "From corporate parties and product launches to weddings and client entertainment — our talents bring polish and professionalism to your events.",
+    features: ["Corporate parties", "Product launches", "Weddings", "Client entertainment"],
   },
   {
-    title: "Private Events",
-    description: "For exclusive gatherings, private parties, and high-profile occasions. Discretion and elegance guaranteed with our premium selection of models.",
-    features: ["Exclusive gatherings", "VIP events", "Private dinners", "Galas"],
+    title: "Travel & Lifestyle Companions",
+    description: "For business trips, city getaways, and exclusive travel, experience the comfort and charisma of our companions who enhance every moment.",
+    features: ["Business trips", "City getaways", "Exclusive travel", "Outstation visits"],
   },
   {
-    title: "Fashion & Editorial",
-    description: "High-fashion models for editorial shoots, runway shows, and fashion campaigns. Our portfolio includes experienced models with diverse looks.",
-    features: ["Runway shows", "Editorial shoots", "Lookbooks", "Fashion weeks"],
-  },
-  {
-    title: "Lifestyle & Hospitality",
-    description: "Premium hospitality and lifestyle representation for luxury brands, hotels, and premium venues. Our models enhance every guest experience.",
-    features: ["Hotel events", "Luxury launches", "Wine tastings", "Art exhibitions"],
+    title: "Premium Photoshoot & Content Models",
+    description: "Professional models available for brand campaigns, influencer collaborations, adverts, e-commerce, fashion shows, and social media projects.",
+    features: ["Brand campaigns", "Influencer collaborations", "E-commerce", "Fashion shows"],
   },
 ];
 

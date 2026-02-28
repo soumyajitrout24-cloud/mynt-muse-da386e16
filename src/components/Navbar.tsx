@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 const navLinks = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
+  { label: "About Us", path: "/about" },
   { label: "Services", path: "/services" },
-  { label: "Gallery", path: "/gallery" },
-  { label: "Profiles", path: "/profiles" },
-  { label: "Pricing", path: "/pricing" },
+  { label: "Gallery & Profiles", path: "/gallery" },
+  { label: "Pricing & Plans", path: "/pricing" },
+  { label: "Booking Policy", path: "/booking-policy" },
+  { label: "FAQs", path: "/faq" },
   { label: "Testimonials", path: "/testimonials" },
   { label: "Contact", path: "/contact" },
-  { label: "FAQ", path: "/faq" },
-  { label: "Booking Policy", path: "/booking-policy" },
 ];
 
 const menuVariants = {
@@ -37,26 +37,24 @@ const Navbar = () => {
     <>
       {/* Hamburger Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-6 left-6 z-[100] flex flex-col justify-center items-center w-12 h-12 gap-[7px] group"
-        aria-label="Toggle menu"
+        onClick={() => setIsOpen(true)}
+        className="fixed top-6 left-6 z-[100] flex flex-col justify-center items-center w-12 h-12 gap-[6px] group rounded-full hover:scale-105 transition-transform duration-300"
+        aria-label="Open menu"
       >
         <motion.span
-          animate={isOpen ? { rotate: 45, y: 9, width: 28 } : { rotate: 0, y: 0, width: 28 }}
-          transition={{ duration: 0.35, ease: "easeInOut" }}
-          className="block h-[1.5px] bg-primary origin-center"
-          style={{ width: 28 }}
+          className="block h-[1.5px] rounded-full bg-primary origin-center"
+          style={{ width: 26 }}
+          whileHover={{ width: 28 }}
         />
         <motion.span
-          animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.25 }}
-          className="block w-5 h-[1.5px] bg-primary origin-center"
-        />
-        <motion.span
-          animate={isOpen ? { rotate: -45, y: -9, width: 28 } : { rotate: 0, y: 0, width: 20 }}
-          transition={{ duration: 0.35, ease: "easeInOut" }}
-          className="block h-[1.5px] bg-primary origin-center self-start ml-[2px]"
+          className="block h-[1.5px] rounded-full bg-primary/70 origin-center"
           style={{ width: 20 }}
+          whileHover={{ width: 28 }}
+        />
+        <motion.span
+          className="block h-[1.5px] rounded-full bg-primary/50 origin-center self-start ml-[2px]"
+          style={{ width: 14 }}
+          whileHover={{ width: 28 }}
         />
       </button>
 
@@ -82,7 +80,7 @@ const Navbar = () => {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed top-0 left-0 z-[95] h-full w-[300px] max-w-[85vw] flex flex-col justify-center px-10 curved-navbar"
+            className="fixed top-0 left-0 z-[95] h-full w-[310px] max-w-[85vw] flex flex-col justify-center px-10 curved-navbar"
             style={{
               background: "linear-gradient(180deg, hsl(158 65% 11%) 0%, hsl(156 62% 15%) 50%, hsl(158 65% 11%) 100%)",
               borderRadius: "0 60px 60px 0",
@@ -99,24 +97,32 @@ const Navbar = () => {
               }}
             />
 
-            {/* Brand */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="mb-10 relative"
-            >
-              <p className="font-display text-lg tracking-[0.2em] text-primary gold-glow">
-                MYNT
-              </p>
-              <p className="font-elegant italic text-sm tracking-[0.15em] text-primary/60">
-                Girlfriend
-              </p>
-              <div className="gold-divider w-16 mt-3" />
-            </motion.div>
+            {/* Top bar: Brand + Close */}
+            <div className="absolute top-8 left-8 right-8 flex items-center justify-between">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                <p className="font-display text-base tracking-[0.2em] text-primary gold-glow">
+                  Mynt Girlfriend
+                </p>
+              </motion.div>
+
+              <motion.button
+                initial={{ opacity: 0, rotate: -90 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                onClick={() => setIsOpen(false)}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
+                aria-label="Close menu"
+              >
+                <X className="w-4 h-4 text-primary" />
+              </motion.button>
+            </div>
 
             {/* Nav Links */}
-            <ul className="space-y-0.5 relative">
+            <ul className="space-y-1 relative mt-4">
               {navLinks.map((link, i) => (
                 <motion.li
                   key={link.path}
@@ -128,13 +134,12 @@ const Navbar = () => {
                   <Link
                     to={link.path}
                     onClick={() => setIsOpen(false)}
-                    className={`group/link flex items-center gap-3 py-2.5 font-elegant text-lg tracking-wider transition-all duration-400 ${
+                    className={`group/link flex items-center gap-3 py-2.5 font-elegant text-[17px] tracking-wider transition-all duration-400 ${
                       location.pathname === link.path
                         ? "text-primary pl-3"
                         : "text-primary/45 hover:text-primary hover:pl-3"
                     }`}
                   >
-                    {/* Active indicator dot */}
                     {location.pathname === link.path && (
                       <motion.span
                         layoutId="nav-indicator"
@@ -166,7 +171,6 @@ const Navbar = () => {
               <p className="font-body text-[10px] tracking-[0.25em] uppercase text-primary/30">
                 Elite Representation
               </p>
-              {/* Decorative dots */}
               <div className="flex gap-1.5 mt-3">
                 <span className="w-1 h-1 rounded-full bg-primary/20" />
                 <span className="w-1 h-1 rounded-full bg-primary/30" />

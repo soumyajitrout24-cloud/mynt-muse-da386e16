@@ -3,12 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import FadeInSection from "@/components/FadeInSection";
 
 const faqs = [
-  { q: "How do I book a model for an event?", a: "Contact us through our enquiry form or email with event details including date, location, duration, and requirements. Our team will respond within 24 hours with availability and recommendations." },
-  { q: "What is your cancellation policy?", a: "Cancellations made 72 hours before the event receive a full refund. Cancellations within 72 hours are subject to a 50% cancellation fee. No-shows are charged in full." },
-  { q: "Do you operate in all cities?", a: "We currently operate in Bangalore, Chennai, Hyderabad, Mumbai, and Nashik. For events in other cities, please contact us to discuss availability." },
-  { q: "What does the booking fee include?", a: "Our booking fee includes model representation, professional styling consultation, event coordination, and dedicated support throughout your event." },
-  { q: "Can I request specific models?", a: "Yes, you can browse our profiles and request specific models. Availability depends on their schedule, and we'll confirm within 24 hours." },
-  { q: "Is everything kept confidential?", a: "Absolutely. Discretion is our top priority. All client information, event details, and engagements are handled with strict confidentiality." },
+  { q: "What makes your service different?", a: "We focus on true professional standards, authentic profiles, and client satisfaction." },
+  { q: "Can I book on the same day?", a: "Due to limited availability and advance reservations, same-day confirmations cannot be guaranteed." },
+  { q: "How do you ensure confidentiality?", a: "Discretion is built into every step — from consultation to engagement." },
+  { q: "Is pricing negotiable?", a: "Pricing reflects premium service and professional standards." },
 ];
 
 const FAQ = () => {
@@ -20,7 +18,7 @@ const FAQ = () => {
         <FadeInSection>
           <div className="text-center mb-14">
             <p className="font-elegant text-sm tracking-[0.3em] uppercase text-primary/50 mb-3">Common Questions</p>
-            <h1 className="font-display text-4xl md:text-5xl tracking-wider text-primary">FAQ</h1>
+            <h1 className="font-display text-4xl md:text-5xl tracking-wider text-primary">FAQs</h1>
             <div className="gold-divider w-20 mx-auto mt-4" />
           </div>
         </FadeInSection>

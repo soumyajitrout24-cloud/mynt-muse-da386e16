@@ -10,36 +10,46 @@ import gallery6 from "@/assets/gallery-6.jpg";
 import gallery7 from "@/assets/gallery-7.jpg";
 import gallery8 from "@/assets/gallery-8.jpg";
 
-const categories = ["All", "High Fashion Models", "Professional Hosts", "Brand Ambassadors", "Lifestyle Models"];
+const categories = ["All", "High Fashion Models", "Event Hosts", "Brand Ambassadors", "Lifestyle Models"];
 
 const galleryItems = [
   { id: 1, category: "High Fashion Models", name: "Aria V.", desc: "Editorial & Runway", image: gallery1 },
-  { id: 2, category: "Professional Hosts", name: "Meera S.", desc: "Corporate Events", image: gallery2 },
+  { id: 2, category: "Event Hosts", name: "Meera S.", desc: "Corporate Events", image: gallery2 },
   { id: 3, category: "Brand Ambassadors", name: "Zara K.", desc: "Brand Campaigns", image: gallery3 },
   { id: 4, category: "Lifestyle Models", name: "Priya R.", desc: "Lifestyle & Hospitality", image: gallery4 },
   { id: 5, category: "High Fashion Models", name: "Ananya D.", desc: "Fashion Editorials", image: gallery5 },
-  { id: 6, category: "Professional Hosts", name: "Kavya M.", desc: "Premium Events", image: gallery6 },
+  { id: 6, category: "Event Hosts", name: "Kavya M.", desc: "Premium Events", image: gallery6 },
   { id: 7, category: "Brand Ambassadors", name: "Riya P.", desc: "Luxury Brands", image: gallery7 },
   { id: 8, category: "Lifestyle Models", name: "Nisha T.", desc: "Lifestyle Shoots", image: gallery8 },
 ];
 
 const Gallery = () => {
   const [active, setActive] = useState("All");
-
   const filtered = active === "All" ? galleryItems : galleryItems.filter((g) => g.category === active);
 
   return (
     <div className="bg-pink-page min-h-screen pt-24 pb-16 px-6">
       <div className="container mx-auto max-w-6xl">
         <FadeInSection>
-          <div className="text-center mb-12">
+          <div className="text-center mb-6">
             <p className="font-elegant text-sm tracking-[0.3em] uppercase text-emerald-dark/50 mb-3">
               Our Portfolio
             </p>
             <h1 className="font-display text-4xl md:text-5xl tracking-wider text-emerald-dark">
-              Gallery
+              Gallery & Profiles
             </h1>
             <div className="h-[1px] w-20 mx-auto mt-4 bg-gradient-to-r from-transparent via-emerald-dark/40 to-transparent" />
+          </div>
+        </FadeInSection>
+
+        <FadeInSection delay={0.1}>
+          <div className="text-center mb-12 max-w-2xl mx-auto">
+            <p className="font-elegant text-base text-emerald-dark/50 leading-relaxed mb-4">
+              Explore our carefully curated portfolio of models — each verified and presented with true, unedited images and professional details. No exaggerated claims, no filters — real profiles, real talent.
+            </p>
+            <p className="font-elegant text-sm text-emerald-dark/40 italic">
+              Full gallery access is available upon advance reservation and private consultation.
+            </p>
           </div>
         </FadeInSection>
 

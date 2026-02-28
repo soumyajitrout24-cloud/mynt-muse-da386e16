@@ -11,15 +11,6 @@ interface Review {
   timestamp: number;
 }
 
-const defaultTestimonials: Review[] = [
-  { name: "Rahul", review: "Truly a professional experience — the quality and poise exceeded expectations.", rating: 5, location: "Mumbai", timestamp: 1700000000000 },
-  { name: "Priya", review: "Excellent talent, discreet service, and professional conduct. Worth every experience.", rating: 5, location: "Bangalore", timestamp: 1700100000000 },
-  { name: "Arjun", review: "Working with MYNT Girlfriend elevated our brand campaign to the next level.", rating: 5, location: "Chennai", timestamp: 1700200000000 },
-  { name: "Sneha", review: "Their editorial models are among the best I've worked with. Professional and punctual.", rating: 5, location: "Hyderabad", timestamp: 1700300000000 },
-  { name: "Vikram", review: "We regularly partner with MYNT for our premium events. Consistently excellent.", rating: 5, location: "Mumbai", timestamp: 1700400000000 },
-  { name: "Aisha", review: "Discretion and class define MYNT Girlfriend. They understand true luxury.", rating: 5, location: "Nashik", timestamp: 1700500000000 },
-];
-
 const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
 const Testimonials = () => {
@@ -32,12 +23,10 @@ const Testimonials = () => {
     if (stored) {
       try {
         const parsed = JSON.parse(stored) as Review[];
-        setReviews([...parsed, ...defaultTestimonials].sort((a, b) => b.timestamp - a.timestamp));
+        setReviews(parsed.sort((a, b) => b.timestamp - a.timestamp));
       } catch {
-        setReviews([...defaultTestimonials].sort((a, b) => b.timestamp - a.timestamp));
+        setReviews([]);
       }
-    } else {
-      setReviews([...defaultTestimonials].sort((a, b) => b.timestamp - a.timestamp));
     }
   }, []);
 
@@ -47,8 +36,6 @@ const Testimonials = () => {
     if (!form.name.trim()) newErrors.name = "Name is required";
     if (!form.review.trim()) newErrors.review = "Review is required";
     if (!form.location) newErrors.location = "Location is required";
-    if (form.name.trim().length > 100) newErrors.name = "Name too long";
-    if (form.review.trim().length > 500) newErrors.review = "Review too long (max 500 chars)";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -85,32 +72,63 @@ const Testimonials = () => {
           </div>
         </FadeInSection>
 
-        {/* Reviews Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-          <AnimatePresence>
-            {reviews.map((t, i) => (
-              <motion.div
-                key={`${t.name}-${t.timestamp}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05, duration: 0.4 }}
-                className="gold-border-card rounded-xl p-6 bg-card h-full"
-              >
-                <div className="flex gap-1 mb-3">
-                  {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />
-                  ))}
-                  {Array.from({ length: 5 - t.rating }).map((_, j) => (
-                    <Star key={`e-${j}`} className="w-3.5 h-3.5 text-primary/20" />
-                  ))}
-                </div>
-                <p className="font-elegant text-base text-primary/60 leading-relaxed mb-5 italic">"{t.review}"</p>
-                <div className="gold-divider w-8 mb-3" />
-                <p className="font-body text-sm text-primary tracking-wide">— {t.name}, {t.location}</p>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+        {/* Static testimonials */}
+        <FadeInSection delay={0.1}>
+          <div className="grid md:grid-cols-2 gap-6 mb-10">
+            <div className="gold-border-card rounded-xl p-6 bg-card">
+              <div className="flex gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, j) => (
+                  <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />
+                ))}
+              </div>
+              <p className="font-elegant text-base text-primary/60 leading-relaxed italic mb-4">
+                "Truly a professional experience — the quality and poise exceeded expectations."
+              </p>
+            </div>
+            <div className="gold-border-card rounded-xl p-6 bg-card">
+              <div className="flex gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, j) => (
+                  <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />
+                ))}
+              </div>
+              <p className="font-elegant text-base text-primary/60 leading-relaxed italic mb-4">
+                "Excellent talent, discreet service, and great conduct."
+              </p>
+            </div>
+          </div>
+          <p className="text-center font-elegant text-sm text-primary/40 italic mb-16">
+            More testimonials available upon request.
+          </p>
+        </FadeInSection>
+
+        {/* User submitted reviews */}
+        {reviews.length > 0 && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            <AnimatePresence>
+              {reviews.map((t, i) => (
+                <motion.div
+                  key={`${t.name}-${t.timestamp}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
+                  className="gold-border-card rounded-xl p-6 bg-card"
+                >
+                  <div className="flex gap-1 mb-3">
+                    {Array.from({ length: t.rating }).map((_, j) => (
+                      <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />
+                    ))}
+                    {Array.from({ length: 5 - t.rating }).map((_, j) => (
+                      <Star key={`e-${j}`} className="w-3.5 h-3.5 text-primary/20" />
+                    ))}
+                  </div>
+                  <p className="font-elegant text-base text-primary/60 leading-relaxed mb-5 italic">"{t.review}"</p>
+                  <div className="gold-divider w-8 mb-3" />
+                  <p className="font-body text-sm text-primary tracking-wide">— {t.name}, {t.location}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
 
         {/* Review Form */}
         <FadeInSection delay={0.2}>

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-model.png";
 
 const HeroSection = () => {
@@ -13,7 +14,7 @@ const HeroSection = () => {
       >
         <img
           src={heroImage}
-          alt="MYNT Girlfriend - Premium Model Representation"
+          alt="Mynt Girlfriend - Elite Indian Model & Companion Service"
           className="w-full h-full object-cover object-top"
           loading="eager"
         />
@@ -21,14 +22,14 @@ const HeroSection = () => {
       </motion.div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6">
+      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
           className="font-elegant text-sm md:text-base tracking-[0.4em] uppercase text-primary/70 mb-4"
         >
-          Luxury Model Representation
+          Elite Indian Model & Companion Service
         </motion.p>
 
         <motion.h1
@@ -37,7 +38,7 @@ const HeroSection = () => {
           transition={{ delay: 0.8, duration: 1 }}
           className="font-display text-5xl md:text-7xl lg:text-8xl tracking-[0.15em] text-primary gold-glow mb-6"
         >
-          MYNT
+          Mynt
           <br />
           <span className="font-elegant italic text-4xl md:text-5xl lg:text-6xl tracking-[0.2em]">
             Girlfriend
@@ -54,11 +55,40 @@ const HeroSection = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 0.8 }}
-          className="font-body text-xs md:text-sm tracking-[0.25em] uppercase text-primary/50 max-w-md mx-auto"
+          transition={{ delay: 1.3, duration: 0.8 }}
+          className="font-body text-xs md:text-sm tracking-[0.2em] uppercase text-primary/60 mb-4"
         >
-          Where elegance meets excellence
+          India's Premier Model Service for Discerning Clients
         </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="font-elegant text-base md:text-lg text-primary/50 leading-relaxed max-w-2xl mx-auto mb-8"
+        >
+          We bridge extraordinary talent with elevated experiences, designed for high-quality consumption at fair value. Combining professionalism, care, discretion, and premium service standards.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.7, duration: 0.8 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+        >
+          <Link
+            to="/contact"
+            className="bg-primary text-primary-foreground font-body text-xs tracking-[0.2em] uppercase px-8 py-3.5 rounded-full hover:bg-gold-light transition-colors duration-300"
+          >
+            Book Consultation
+          </Link>
+          <Link
+            to="/services"
+            className="border border-primary/40 text-primary font-body text-xs tracking-[0.2em] uppercase px-8 py-3.5 rounded-full hover:border-primary/80 transition-colors duration-300"
+          >
+            View Services
+          </Link>
+        </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div

@@ -15,42 +15,36 @@ const About = () => {
         <FadeInSection delay={0.2}>
           <div className="space-y-8">
             <p className="font-elegant text-lg md:text-xl text-primary/60 leading-relaxed text-center">
-              MYNT Girlfriend is India's premier luxury model representation agency, curating an exclusive portfolio of
-              the most sophisticated and professional models for high-profile events, brand campaigns, and private occasions.
+              At Mynt Girlfriend, we believe in true professionalism over transactions.
+            </p>
+
+            <p className="font-elegant text-base text-primary/50 leading-relaxed text-center">
+              Our mission is to deliver genuine client satisfaction by pairing you with carefully curated models who embody poise, charisma, and refinement — without inflated promises or misleading imagery.
             </p>
 
             <div className="gold-divider w-full" />
 
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              {[
-                { number: "500+", label: "Events Served" },
-                { number: "150+", label: "Premium Models" },
-                { number: "50+", label: "Corporate Clients" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <p className="font-display text-3xl text-primary gold-glow mb-1">{stat.number}</p>
-                  <p className="font-elegant text-sm text-primary/40 tracking-wider">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="gold-divider w-full" />
-
             <div className="gold-border-card rounded-xl p-8 bg-card">
-              <h2 className="font-display text-2xl text-primary mb-4 tracking-wide">Our Philosophy</h2>
-              <p className="font-elegant text-base text-primary/60 leading-relaxed">
-                We believe in the art of representation — where every model is not just a face, but an embodiment of grace,
-                professionalism, and excellence. Our rigorous selection process ensures that only the finest talent represents
-                your brand, creating memorable experiences that resonate long after the event.
-              </p>
+              <h2 className="font-display text-2xl text-primary mb-5 tracking-wide">Our Standards</h2>
+              <ul className="space-y-3">
+                {[
+                  "Verified profiles with authentic portfolios",
+                  "Professional conduct and etiquette",
+                  "Respectful, client-centric service",
+                  "Discretion and confidentiality guaranteed",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="text-primary mt-1 text-sm">✦</span>
+                    <span className="font-elegant text-base text-primary/50 leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="gold-border-card rounded-xl p-8 bg-card">
-              <h2 className="font-display text-2xl text-primary mb-4 tracking-wide">Discretion & Trust</h2>
-              <p className="font-elegant text-base text-primary/60 leading-relaxed">
-                Confidentiality is at the heart of everything we do. Our clients trust us with their most prestigious events,
-                and we honor that trust with unwavering discretion. Every engagement is handled with the utmost professionalism
-                and privacy.
+              <h2 className="font-display text-2xl text-primary mb-4 tracking-wide">Advance Booking</h2>
+              <p className="font-elegant text-base text-primary/50 leading-relaxed">
+                Unlike typical last-minute services, our advance bookings ensure quality, trust, and guarantee of availability. Without advance confirmation, we cannot guarantee the same model — because elite talents are in high demand.
               </p>
             </div>
           </div>

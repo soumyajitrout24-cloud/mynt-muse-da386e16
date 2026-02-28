@@ -13,20 +13,30 @@ const BookingPolicy = () => {
         </FadeInSection>
 
         <FadeInSection delay={0.2}>
-          <div className="space-y-6">
+          <div className="gold-border-card rounded-xl p-8 bg-card mb-8">
+            <p className="font-elegant text-lg text-primary/60 leading-relaxed text-center">
+              To deliver consistency and quality without disappointment:
+            </p>
+          </div>
+
+          <div className="space-y-4">
             {[
-              { title: "Booking Confirmation", content: "All bookings are confirmed only after receipt of the agreed advance payment. A confirmation email will be sent within 24 hours of payment." },
-              { title: "Payment Terms", content: "A 50% advance is required to confirm a booking. The remaining balance is due 24 hours before the event. We accept bank transfers and UPI." },
-              { title: "Cancellation Policy", content: "Cancellations made 72+ hours before: full refund. 48-72 hours: 50% refund. Less than 48 hours: no refund. We recommend booking with adequate lead time." },
-              { title: "Model Conduct", content: "Our models maintain the highest standards of professionalism. Any inappropriate behavior towards our models will result in immediate termination of services without refund." },
-              { title: "Client Responsibilities", content: "Clients must provide a safe and professional working environment. Event details, venue, and schedule must be communicated at least 48 hours in advance." },
-              { title: "Confidentiality", content: "All engagement details are kept strictly confidential. We do not share client information with third parties under any circumstances." },
-            ].map((section, i) => (
-              <div key={i} className="gold-border-card rounded-xl p-6 bg-card">
-                <h2 className="font-display text-xl text-primary mb-3 tracking-wide">{section.title}</h2>
-                <p className="font-elegant text-base text-primary/50 leading-relaxed">{section.content}</p>
+              "Advance reservations are mandatory.",
+              "Same-day confirmations cannot be guaranteed.",
+              "Once a profile is reserved it cannot be held indefinitely without confirmation.",
+              "High-ticket experiences require prior planning.",
+            ].map((item, i) => (
+              <div key={i} className="gold-border-card rounded-xl p-6 bg-card flex items-start gap-4">
+                <span className="text-primary mt-0.5 text-sm">✦</span>
+                <p className="font-elegant text-base text-primary/50 leading-relaxed">{item}</p>
               </div>
             ))}
+          </div>
+
+          <div className="gold-border-card rounded-xl p-8 bg-card mt-8 text-center">
+            <p className="font-elegant text-base text-primary/50 leading-relaxed">
+              If you're ready to secure your preferred model or experience, we recommend booking early to avoid availability issues.
+            </p>
           </div>
         </FadeInSection>
       </div>
