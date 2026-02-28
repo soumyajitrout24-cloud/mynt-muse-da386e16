@@ -1,83 +1,90 @@
-import { useState } from "react";
+import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
 import FadeInSection from "@/components/FadeInSection";
 
 const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", location: "", message: "" });
+  const handleWhatsApp = () => {
+    const url = `https://wa.me/919999999999?text=${encodeURIComponent("Hi, I'd like to enquire about MYNT Girlfriend services.")}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
+  const handleEmail = () => {
+    window.location.href = "mailto:contact@myntgirlfriend.com?subject=" + encodeURIComponent("Enquiry - MYNT Girlfriend");
+  };
+
+  const handlePhone = () => {
+    window.location.href = "tel:+919999999999";
   };
 
   return (
     <div className="bg-emerald-gradient min-h-screen pt-24 pb-16 px-6">
-      <div className="container mx-auto max-w-2xl">
+      <div className="container mx-auto max-w-3xl">
         <FadeInSection>
           <div className="text-center mb-14">
             <p className="font-elegant text-sm tracking-[0.3em] uppercase text-primary/50 mb-3">Get in Touch</p>
-            <h1 className="font-display text-4xl md:text-5xl tracking-wider text-primary">Contact</h1>
+            <h1 className="font-display text-4xl md:text-5xl tracking-wider text-primary">Contact Us</h1>
+            <p className="font-elegant text-base text-primary/40 mt-3">Reach out for a private and confidential consultation</p>
             <div className="gold-divider w-20 mx-auto mt-4" />
           </div>
         </FadeInSection>
 
+        {/* 3 CTAs */}
         <FadeInSection delay={0.2}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block font-body text-xs tracking-[0.15em] uppercase text-primary/50 mb-2">Name</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full bg-card border border-primary/20 rounded-lg px-4 py-3 font-body text-sm text-primary placeholder:text-primary/30 focus:border-primary/50 focus:outline-none transition-colors"
-                placeholder="Your name"
-              />
-            </div>
-
-            <div>
-              <label className="block font-body text-xs tracking-[0.15em] uppercase text-primary/50 mb-2">Email</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-card border border-primary/20 rounded-lg px-4 py-3 font-body text-sm text-primary placeholder:text-primary/30 focus:border-primary/50 focus:outline-none transition-colors"
-                placeholder="your@email.com"
-              />
-            </div>
-
-            <div>
-              <label className="block font-body text-xs tracking-[0.15em] uppercase text-primary/50 mb-2">Location</label>
-              <select
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="w-full bg-card border border-primary/20 rounded-lg px-4 py-3 font-body text-sm text-primary focus:border-primary/50 focus:outline-none transition-colors appearance-none cursor-pointer"
-              >
-                <option value="" className="bg-card text-primary/30">Select location</option>
-                {locations.map((loc) => (
-                  <option key={loc} value={loc} className="bg-card text-primary">{loc}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block font-body text-xs tracking-[0.15em] uppercase text-primary/50 mb-2">Message</label>
-              <textarea
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                rows={5}
-                className="w-full bg-card border border-primary/20 rounded-lg px-4 py-3 font-body text-sm text-primary placeholder:text-primary/30 focus:border-primary/50 focus:outline-none transition-colors resize-none"
-                placeholder="Tell us about your requirements..."
-              />
-            </div>
+          <div className="grid md:grid-cols-3 gap-5 mb-16">
+            <button
+              onClick={handleWhatsApp}
+              className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer"
+            >
+              <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:border-primary/60 transition-colors">
+                <MessageCircle className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-display text-lg text-primary tracking-wider">WhatsApp</h3>
+              <p className="font-elegant text-sm text-primary/40">Chat with us instantly</p>
+            </button>
 
             <button
-              type="submit"
-              className="w-full bg-primary text-primary-foreground font-body text-sm tracking-[0.2em] uppercase py-3.5 rounded-lg hover:bg-gold-light transition-colors duration-300"
+              onClick={handleEmail}
+              className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer"
             >
-              Send Enquiry
+              <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:border-primary/60 transition-colors">
+                <Mail className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-display text-lg text-primary tracking-wider">Email</h3>
+              <p className="font-elegant text-sm text-primary/40">contact@myntgirlfriend.com</p>
             </button>
-          </form>
+
+            <button
+              onClick={handlePhone}
+              className="gold-border-card rounded-xl p-8 bg-card flex flex-col items-center gap-4 group cursor-pointer"
+            >
+              <div className="w-14 h-14 rounded-full border border-primary/30 flex items-center justify-center group-hover:border-primary/60 transition-colors">
+                <Phone className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-display text-lg text-primary tracking-wider">Phone</h3>
+              <p className="font-elegant text-sm text-primary/40">Call for consultation</p>
+            </button>
+          </div>
+        </FadeInSection>
+
+        {/* Locations */}
+        <FadeInSection delay={0.4}>
+          <div className="text-center">
+            <p className="font-elegant text-sm tracking-[0.3em] uppercase text-primary/50 mb-3">Where We Operate</p>
+            <h2 className="font-display text-2xl md:text-3xl tracking-wider text-primary mb-2">Our Locations</h2>
+            <div className="gold-divider w-16 mx-auto mt-3 mb-10" />
+
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {locations.map((loc, i) => (
+                <FadeInSection key={loc} delay={0.5 + i * 0.1}>
+                  <div className="gold-border-card rounded-xl p-5 bg-card flex flex-col items-center gap-3">
+                    <MapPin className="w-5 h-5 text-primary/60" />
+                    <p className="font-body text-sm tracking-wider text-primary uppercase">{loc}</p>
+                  </div>
+                </FadeInSection>
+              ))}
+            </div>
+          </div>
         </FadeInSection>
       </div>
     </div>

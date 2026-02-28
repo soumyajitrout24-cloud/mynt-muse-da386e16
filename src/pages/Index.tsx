@@ -81,6 +81,36 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Spa Coming Soon Poster */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <FadeInSection>
+            <div className="relative rounded-2xl overflow-hidden border border-primary/30 shadow-gold bg-card">
+              <div className="absolute inset-0 bg-gradient-to-r from-card via-card/95 to-transparent z-10" />
+              <div className="relative z-20 flex flex-col md:flex-row items-center gap-8 p-10 md:p-14">
+                <div className="flex-1 text-center md:text-left">
+                  <p className="font-body text-xs tracking-[0.3em] uppercase text-primary/40 mb-3">Coming Soon</p>
+                  <h2 className="font-display text-3xl md:text-4xl tracking-wider text-primary mb-4 gold-glow">
+                    Spa & Massage
+                  </h2>
+                  <div className="gold-divider w-16 mb-4 mx-auto md:mx-0" />
+                  <p className="font-elegant text-lg text-primary/50 leading-relaxed">
+                    Indulge in premium spa and massage experiences with our carefully selected wellness professionals.
+                    Luxury relaxation, coming to you soon.
+                  </p>
+                </div>
+                <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl border border-primary/20 bg-gradient-to-br from-card to-secondary flex items-center justify-center flex-shrink-0">
+                  <div className="text-center">
+                    <p className="font-display text-5xl text-primary/15">✦</p>
+                    <p className="font-elegant text-sm text-primary/30 mt-2 tracking-wider">Coming Soon</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeInSection>
+        </div>
+      </section>
+
       {/* Testimonials Preview */}
       <section className="py-20 px-6 border-t border-primary/10">
         <div className="container mx-auto max-w-5xl">

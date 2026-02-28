@@ -1,18 +1,26 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FadeInSection from "@/components/FadeInSection";
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+import gallery5 from "@/assets/gallery-5.jpg";
+import gallery6 from "@/assets/gallery-6.jpg";
+import gallery7 from "@/assets/gallery-7.jpg";
+import gallery8 from "@/assets/gallery-8.jpg";
 
 const categories = ["All", "High Fashion Models", "Professional Hosts", "Brand Ambassadors", "Lifestyle Models"];
 
 const galleryItems = [
-  { id: 1, category: "High Fashion Models", name: "Aria V.", desc: "Editorial & Runway" },
-  { id: 2, category: "Professional Hosts", name: "Meera S.", desc: "Corporate Events" },
-  { id: 3, category: "Brand Ambassadors", name: "Zara K.", desc: "Brand Campaigns" },
-  { id: 4, category: "Lifestyle Models", name: "Priya R.", desc: "Lifestyle & Hospitality" },
-  { id: 5, category: "High Fashion Models", name: "Ananya D.", desc: "Fashion Editorials" },
-  { id: 6, category: "Professional Hosts", name: "Kavya M.", desc: "Premium Events" },
-  { id: 7, category: "Brand Ambassadors", name: "Riya P.", desc: "Luxury Brands" },
-  { id: 8, category: "Lifestyle Models", name: "Nisha T.", desc: "Lifestyle Shoots" },
+  { id: 1, category: "High Fashion Models", name: "Aria V.", desc: "Editorial & Runway", image: gallery1 },
+  { id: 2, category: "Professional Hosts", name: "Meera S.", desc: "Corporate Events", image: gallery2 },
+  { id: 3, category: "Brand Ambassadors", name: "Zara K.", desc: "Brand Campaigns", image: gallery3 },
+  { id: 4, category: "Lifestyle Models", name: "Priya R.", desc: "Lifestyle & Hospitality", image: gallery4 },
+  { id: 5, category: "High Fashion Models", name: "Ananya D.", desc: "Fashion Editorials", image: gallery5 },
+  { id: 6, category: "Professional Hosts", name: "Kavya M.", desc: "Premium Events", image: gallery6 },
+  { id: 7, category: "Brand Ambassadors", name: "Riya P.", desc: "Luxury Brands", image: gallery7 },
+  { id: 8, category: "Lifestyle Models", name: "Nisha T.", desc: "Lifestyle Shoots", image: gallery8 },
 ];
 
 const Gallery = () => {
@@ -65,16 +73,19 @@ const Gallery = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
-                className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-gold/20 bg-emerald-dark/5"
+                className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-gold/20"
               >
-                <div className="absolute inset-0 bg-gradient-to-b from-emerald-dark/10 to-emerald-dark/60 flex items-end p-4">
+                <img
+                  src={item.image}
+                  alt={`${item.name} - ${item.desc}`}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-emerald-dark/80 flex items-end p-4">
                   <div>
                     <h3 className="font-display text-lg text-pink-page">{item.name}</h3>
                     <p className="font-elegant text-xs tracking-wider text-pink-page/70">{item.desc}</p>
                   </div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="font-display text-6xl text-emerald-dark/10">{item.id}</span>
                 </div>
               </motion.div>
             ))}

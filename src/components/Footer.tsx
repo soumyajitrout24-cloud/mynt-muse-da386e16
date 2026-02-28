@@ -1,51 +1,114 @@
 import { Link } from "react-router-dom";
+import { MapPin, Mail, Phone } from "lucide-react";
 
 const footerLinks = [
   { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
   { label: "Services", path: "/services" },
   { label: "Gallery", path: "/gallery" },
+  { label: "Profiles", path: "/profiles" },
   { label: "Pricing", path: "/pricing" },
+  { label: "Testimonials", path: "/testimonials" },
   { label: "Contact", path: "/contact" },
   { label: "FAQ", path: "/faq" },
+  { label: "Booking Policy", path: "/booking-policy" },
 ];
+
+const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-primary/30 py-8">
+    <footer className="bg-card border-t-2 border-primary/30 pt-14 pb-8">
+      {/* Gold top accent line */}
+      <div className="gold-divider w-full mb-10 opacity-40" />
+
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo */}
+        <div className="grid md:grid-cols-4 gap-10 mb-10">
+          {/* Brand */}
           <div>
-            <h3 className="font-display text-xl tracking-[0.2em] text-primary gold-glow">
-              MYNT GIRLFRIEND
+            <h3 className="font-display text-2xl tracking-[0.2em] text-primary gold-glow mb-2">
+              MYNT
             </h3>
-            <p className="font-elegant text-xs tracking-[0.15em] text-primary/50 mt-1">
-              Luxury Model Representation
+            <p className="font-elegant italic text-lg tracking-wider text-primary/60 mb-4">Girlfriend</p>
+            <p className="font-elegant text-sm text-primary/40 leading-relaxed">
+              Elite Indian Model & Companion Service. Where elegance meets excellence.
             </p>
           </div>
 
-          {/* Links */}
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {footerLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className="font-body text-xs tracking-wider text-primary/50 hover:text-primary transition-colors duration-300 uppercase"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Contact */}
-          <div className="text-center md:text-right">
-            <p className="font-body text-xs text-primary/40">
-              contact@myntgirlfriend.com
-            </p>
-            <p className="font-body text-xs text-primary/30 mt-1">
-              © {new Date().getFullYear()} Mynt Girlfriend
-            </p>
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-body text-xs tracking-[0.2em] uppercase text-primary/50 mb-5">Quick Links</h4>
+            <nav className="flex flex-col gap-2">
+              {footerLinks.slice(0, 5).map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="font-elegant text-sm tracking-wider text-primary/40 hover:text-primary transition-colors duration-300"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
           </div>
+
+          {/* More Links */}
+          <div>
+            <h4 className="font-body text-xs tracking-[0.2em] uppercase text-primary/50 mb-5">Explore</h4>
+            <nav className="flex flex-col gap-2">
+              {footerLinks.slice(5).map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="font-elegant text-sm tracking-wider text-primary/40 hover:text-primary transition-colors duration-300"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Locations & Contact */}
+          <div>
+            <h4 className="font-body text-xs tracking-[0.2em] uppercase text-primary/50 mb-5">Locations</h4>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {locations.map((loc) => (
+                <span
+                  key={loc}
+                  className="inline-flex items-center gap-1.5 font-elegant text-xs tracking-wider text-primary/40 border border-primary/15 rounded-full px-3 py-1"
+                >
+                  <MapPin className="w-3 h-3" />
+                  {loc}
+                </span>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <a href="mailto:contact@myntgirlfriend.com" className="flex items-center gap-2 font-elegant text-xs text-primary/40 hover:text-primary transition-colors">
+                <Mail className="w-3.5 h-3.5" />
+                contact@myntgirlfriend.com
+              </a>
+              <a href="tel:+919999999999" className="flex items-center gap-2 font-elegant text-xs text-primary/40 hover:text-primary transition-colors">
+                <Phone className="w-3.5 h-3.5" />
+                +91 99999 99999
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="gold-divider w-full mb-6" />
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+          <p className="font-body text-[10px] tracking-[0.15em] text-primary/25 uppercase">
+            © {new Date().getFullYear()} Mynt Girlfriend. All rights reserved.
+          </p>
+          <div className="flex gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-primary/20" />
+            <span className="w-1 h-1 rounded-full bg-primary/30" />
+            <span className="w-1 h-1 rounded-full bg-primary/20" />
+          </div>
+          <p className="font-elegant text-[10px] tracking-[0.2em] text-primary/20 uppercase">
+            Discretion · Excellence · Exclusivity
+          </p>
         </div>
       </div>
     </footer>
