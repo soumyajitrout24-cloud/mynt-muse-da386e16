@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-model.png";
+import logoLotus from "@/assets/logo-lotus.png";
 
 const HeroSection = () => {
   return (
@@ -23,6 +24,16 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        {/* Lotus Logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="mb-4"
+        >
+          <img src={logoLotus} alt="Mynt Girlfriend Logo" className="w-14 h-14 md:w-16 md:h-16 mx-auto object-contain" />
+        </motion.div>
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,7 +106,7 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 0.8 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          className="mt-16 flex justify-center"
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}

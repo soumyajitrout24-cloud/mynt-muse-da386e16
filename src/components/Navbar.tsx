@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import logoLotus from "@/assets/logo-lotus.png";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -35,28 +36,36 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Hamburger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed top-6 left-6 z-[100] flex flex-col justify-center items-center w-12 h-12 gap-[6px] group rounded-full hover:scale-105 transition-transform duration-300"
-        aria-label="Open menu"
-      >
-        <motion.span
-          className="block h-[1.5px] rounded-full bg-primary origin-center"
-          style={{ width: 26 }}
-          whileHover={{ width: 28 }}
-        />
-        <motion.span
-          className="block h-[1.5px] rounded-full bg-primary/70 origin-center"
-          style={{ width: 20 }}
-          whileHover={{ width: 28 }}
-        />
-        <motion.span
-          className="block h-[1.5px] rounded-full bg-primary/50 origin-center self-start ml-[2px]"
-          style={{ width: 14 }}
-          whileHover={{ width: 28 }}
-        />
-      </button>
+      {/* Hamburger Button — hidden when menu is open */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setIsOpen(true)}
+            className="fixed top-6 left-6 z-[100] flex flex-col justify-center items-center w-12 h-12 gap-[6px] group rounded-full hover:scale-105 transition-transform duration-300"
+            aria-label="Open menu"
+          >
+            <motion.span
+              className="block h-[1.5px] rounded-full bg-primary origin-center"
+              style={{ width: 26 }}
+              whileHover={{ width: 28 }}
+            />
+            <motion.span
+              className="block h-[1.5px] rounded-full bg-primary/70 origin-center"
+              style={{ width: 20 }}
+              whileHover={{ width: 28 }}
+            />
+            <motion.span
+              className="block h-[1.5px] rounded-full bg-primary/50 origin-center self-start ml-[2px]"
+              style={{ width: 14 }}
+              whileHover={{ width: 28 }}
+            />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Overlay */}
       <AnimatePresence>
@@ -103,8 +112,10 @@ const Navbar = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
+                className="flex items-center gap-2"
               >
-                <p className="font-display text-base tracking-[0.2em] text-primary gold-glow">
+                <img src={logoLotus} alt="Mynt Girlfriend" className="w-7 h-7 object-contain" />
+                <p className="font-display text-sm tracking-[0.2em] text-primary gold-glow">
                   Mynt Girlfriend
                 </p>
               </motion.div>

@@ -96,9 +96,6 @@ const Testimonials = () => {
               </p>
             </div>
           </div>
-          <p className="text-center font-elegant text-sm text-primary/40 italic mb-16">
-            More testimonials available upon request.
-          </p>
         </FadeInSection>
 
         {/* User submitted reviews */}

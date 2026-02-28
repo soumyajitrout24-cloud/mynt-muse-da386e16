@@ -4,6 +4,7 @@ import MarqueeStrip from "@/components/MarqueeStrip";
 import FadeInSection from "@/components/FadeInSection";
 import { Shield, Award, Diamond } from "lucide-react";
 import serviceImage from "@/assets/service-preview.png";
+import spaImage from "@/assets/spa-massage.jpg";
 
 const Index = () => {
   return (
@@ -124,11 +125,13 @@ const Index = () => {
                     Premium Experience Guaranteed
                   </p>
                 </div>
-                <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl border border-primary/20 bg-gradient-to-br from-card to-secondary flex items-center justify-center flex-shrink-0">
-                  <div className="text-center">
-                    <p className="font-display text-5xl text-primary/15">✦</p>
-                    <p className="font-elegant text-sm text-primary/30 mt-2 tracking-wider">Coming Soon</p>
-                  </div>
+                <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl border border-primary/20 overflow-hidden flex-shrink-0">
+                  <img
+                    src={spaImage}
+                    alt="Luxury Spa Massage Coming Soon"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </div>

@@ -26,12 +26,6 @@ const plans = [
   },
 ];
 
-const tierStyles = {
-  silver: "border-primary/30 bg-card",
-  gold: "border-primary/50 bg-emerald-dark scale-[1.02]",
-  platinum: "border-primary bg-emerald-dark shadow-[0_0_30px_hsl(43_56%_52%/0.15)]",
-};
-
 const Pricing = () => {
   return (
     <div className="bg-emerald-gradient min-h-screen pt-24 pb-16 px-6">
@@ -47,26 +41,38 @@ const Pricing = () => {
           </div>
         </FadeInSection>
 
-        <div className="grid md:grid-cols-3 gap-6 items-start">
+        <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {plans.map((plan, i) => (
             <FadeInSection key={plan.name} delay={i * 0.15}>
-              <div className={`gold-border-card rounded-xl p-8 ${tierStyles[plan.tier]} relative hover:-translate-y-1 transition-transform duration-400`}>
+              <div
+                className={`relative flex flex-col h-full rounded-2xl p-8 md:p-10 border transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_hsl(43_56%_52%/0.2)] ${
+                  plan.tier === "platinum"
+                    ? "border-primary bg-emerald-dark shadow-[0_0_40px_hsl(43_56%_52%/0.12)]"
+                    : plan.tier === "gold"
+                    ? "border-primary/50 bg-emerald-dark"
+                    : "border-primary/20 bg-card"
+                }`}
+              >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground font-body text-[10px] tracking-[0.2em] uppercase px-4 py-1 rounded-full">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground font-body text-[10px] tracking-[0.2em] uppercase px-5 py-1.5 rounded-full shadow-lg">
                     Most Popular
                   </div>
                 )}
-                <h3 className="font-display text-2xl text-primary tracking-wide mb-1">{plan.name}</h3>
-                <p className="font-elegant text-base text-primary/60 mb-1 italic">{plan.subtitle}</p>
-                <p className="font-elegant text-sm text-primary/40 mb-6">{plan.desc}</p>
+
+                <div className="mb-6">
+                  <h3 className="font-display text-2xl text-primary tracking-wide mb-1">{plan.name}</h3>
+                  <p className="font-elegant text-base text-primary/60 italic">{plan.subtitle}</p>
+                </div>
+
+                <p className="font-elegant text-sm text-primary/40 mb-6 leading-relaxed">{plan.desc}</p>
 
                 <div className="gold-divider w-full mb-6" />
 
-                <ul className="space-y-3">
+                <ul className="space-y-4 flex-1">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-center gap-3">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                      <span className="font-body text-sm text-primary/60">{f}</span>
+                    <li key={f} className="flex items-start gap-3">
+                      <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="font-body text-sm text-primary/60 leading-relaxed">{f}</span>
                     </li>
                   ))}
                 </ul>
