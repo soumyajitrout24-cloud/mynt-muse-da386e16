@@ -16,46 +16,36 @@ import FAQ from "./pages/FAQ";
 import BookingPolicy from "./pages/BookingPolicy";
 import NotFound from "./pages/NotFound";
 import Loader from "@/components/Loader";
+import WhatsAppCTA from "@/components/WhatsappCta";; // <-- Import WhatsApp CTA
 
 import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
-
 function App() {
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-
   }, []);
-
 
   // Show Loader First
   if (loading) {
     return <Loader />;
   }
 
-
   return (
-
     <QueryClientProvider client={queryClient}>
-
       <TooltipProvider>
-
         <Toaster />
         <Sonner />
 
         <BrowserRouter>
-
           <Navbar />
 
           <Routes>
-
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
@@ -66,19 +56,16 @@ function App() {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/booking-policy" element={<BookingPolicy />} />
             <Route path="*" element={<NotFound />} />
-
           </Routes>
 
           <Footer />
 
+          {/* WhatsApp CTA - sticky on all pages */}
+          <WhatsAppCTA />
         </BrowserRouter>
-
       </TooltipProvider>
-
     </QueryClientProvider>
-
   );
-
 }
 
 export default App;
