@@ -40,22 +40,16 @@ const watermarkImage = (src: string): Promise<string> =>
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(img, 0, 0);
 
-      // Tiled diagonal watermarks
       const text = "Mynt Girlfriend";
-      const fontSize = Math.max(16, Math.floor(canvas.width / 14));
+      const fontSize = Math.max(18, Math.floor(canvas.width / 10));
       ctx.font = `600 ${fontSize}px sans-serif`;
-      ctx.fillStyle = "rgba(255,255,255,0.18)";
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
-      const gap = fontSize * 5;
       ctx.save();
-      ctx.rotate(-0.35);
-      for (let y = -canvas.height; y < canvas.height * 2; y += gap) {
-        for (let x = -canvas.width; x < canvas.width * 2; x += gap) {
-          ctx.fillText(text, x, y);
-        }
-      }
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(-0.15);
+      ctx.fillText(text, 0, 0);
       ctx.restore();
 
       resolve(canvas.toDataURL("image/jpeg", 0.85));
