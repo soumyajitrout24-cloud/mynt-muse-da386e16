@@ -18,14 +18,19 @@ import c6 from "../assets/c6.jpg";
 import c7 from "../assets/c7.jpg";
 import c8 from "../assets/c8.jpg";
 
-// Hyderabad Images (only 2 real)
+// Hyderabad Images
 import h1 from "../assets/h1.jpg";
 import h2 from "../assets/h2.jpg";
 
-// Location Icon
-import locationIcon from "../assets/location-icon.png";
+// Hotel Images (AI-generated luxury hotel visuals)
+import hotel1 from "../assets/hotel-1.jpg";
+import hotel2 from "../assets/hotel-2.jpg";
+import hotel3 from "../assets/hotel-3.jpg";
+import hotel4 from "../assets/hotel-4.jpg";
+import hotel5 from "../assets/hotel-5.jpg";
+import hotel6 from "../assets/hotel-6.jpg";
 
-export const locationData: any = {
+export const locationData: Record<string, { name: string; image: string }[]> = {
   bangalore: [
     { name: "Indiranagar", image: b1 },
     { name: "MG Road", image: b2 },
@@ -51,35 +56,35 @@ export const locationData: any = {
   hyderabad: [
     { name: "Banjara Hills", image: h1 },
     { name: "Jubilee Hills", image: h2 },
-    { name: "Hitech City", image: locationIcon },
-    { name: "Gachibowli", image: locationIcon },
-    { name: "Madhapur", image: locationIcon },
-    { name: "Begumpet", image: locationIcon },
-    { name: "Secunderabad", image: locationIcon },
-    { name: "Kukatpally", image: locationIcon },
+    { name: "Hitech City", image: hotel1 },
+    { name: "Gachibowli", image: hotel2 },
+    { name: "Madhapur", image: hotel3 },
+    { name: "Begumpet", image: hotel4 },
+    { name: "Secunderabad", image: hotel5 },
+    { name: "Kukatpally", image: hotel6 },
   ],
 
   mumbai: [
-    { name: "Bandra", image: locationIcon },
-    { name: "Juhu", image: locationIcon },
-    { name: "Andheri", image: locationIcon },
-    { name: "Colaba", image: locationIcon },
-    { name: "Powai", image: locationIcon },
-    { name: "Lower Parel", image: locationIcon },
-    { name: "Dadar", image: locationIcon },
-    { name: "Worli", image: locationIcon },
-    { name: "Santacruz", image: locationIcon },
+    { name: "Bandra", image: hotel1 },
+    { name: "Juhu", image: hotel2 },
+    { name: "Andheri", image: hotel3 },
+    { name: "Colaba", image: hotel4 },
+    { name: "Powai", image: hotel5 },
+    { name: "Lower Parel", image: hotel6 },
+    { name: "Dadar", image: hotel1 },
+    { name: "Worli", image: hotel2 },
+    { name: "Santacruz", image: hotel3 },
   ],
 
   nashik: [
-    { name: "Gangapur Road", image: locationIcon },
-    { name: "College Road", image: locationIcon },
-    { name: "Panchavati", image: locationIcon },
-    { name: "Indira Nagar", image: locationIcon },
-    { name: "Satpur", image: locationIcon },
-    { name: "Pathardi Phata", image: locationIcon },
-    { name: "Trimbak Road", image: locationIcon },
-    { name: "CIDCO", image: locationIcon },
-    { name: "Ambad", image: locationIcon },
+    { name: "Gangapur Road", image: hotel1 },
+    { name: "College Road", image: hotel2 },
+    { name: "Panchavati", image: hotel3 },
+    { name: "Indira Nagar", image: hotel4 },
+    { name: "Satpur", image: hotel5 },
+    { name: "Pathardi Phata", image: hotel6 },
+    { name: "Trimbak Road", image: hotel1 },
+    { name: "CIDCO", image: hotel2 },
+    { name: "Ambad", image: hotel3 },
   ],
 };

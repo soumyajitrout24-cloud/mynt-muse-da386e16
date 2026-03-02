@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import FadeInSection from "@/components/FadeInSection";
 
-// Import images 111–130
 import img111 from "@/assets/111.jpeg";
 import img112 from "@/assets/112.jpeg";
 import img113 from "@/assets/113.png";
@@ -24,61 +23,17 @@ import img128 from "@/assets/128.png";
 import img129 from "@/assets/129.png";
 import img130 from "@/assets/130.png";
 
-// Put images into an array
 const images = [
-  img111,img112,img113,img114,img115,img116,img117,img118,img119,img120,
-  img121,img122,img123,img124,img125,img126,img127,img128,img129,img130
+  img111, img112, img113, img114, img115, img116, img117, img118, img119, img120,
+  img121, img122, img123, img124, img125, img126, img127, img128, img129, img130,
 ];
 
 const Gallery = () => {
-  const [watermarkedImages, setWatermarkedImages] = useState<string[]>([]);
-
-  useEffect(() => {
-    const generateWatermarkedImages = async () => {
-      const wmImages: string[] = [];
-
-      for (let src of images) {
-        const img = new Image();
-        img.src = src;
-        await new Promise((res) => (img.onload = res));
-
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) continue;
-
-        // Draw original image
-        ctx.drawImage(img, 0, 0);
-
-        // Watermark in the center
-        const text = "Mynt Girlfriend";
-        const fontSize = Math.floor(canvas.width / 10);
-        ctx.font = `${fontSize}px Arial`;
-        ctx.fillStyle = "rgba(255,255,255,0.4)";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        ctx.save();
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(-0.1);
-        ctx.fillText(text, 0, 0);
-        ctx.restore();
-
-        wmImages.push(canvas.toDataURL("image/png"));
-      }
-
-      setWatermarkedImages(wmImages);
-    };
-
-    generateWatermarkedImages();
-  }, []);
+  const [loaded, setLoaded] = useState<Record<number, boolean>>({});
 
   return (
     <div className="bg-pink-page min-h-screen pt-24 pb-16 px-6">
       <div className="container mx-auto max-w-6xl">
-
-        {/* Title */}
         <FadeInSection>
           <div className="text-center mb-5 md:mb-6">
             <p className="font-elegant text-xs md:text-sm tracking-[0.3em] uppercase text-emerald-dark/50 mb-3">
@@ -91,39 +46,48 @@ const Gallery = () => {
           </div>
         </FadeInSection>
 
-        {/* Description */}
         <FadeInSection delay={0.1}>
           <div className="text-center mb-10 md:mb-12 max-w-2xl mx-auto">
-            <p className="font-elegant text-sm md:text-base text-emerald-dark/50 leading-relaxed mb-3">
+            <p className="font-elegant text-sm md:text-base text-emerald-dark/50 leading-relaxed">
               Explore our carefully curated portfolio — images are watermarked for authenticity.
             </p>
-            {/* Removed Right-click → Save text */}
           </div>
         </FadeInSection>
 
-        {/* Gallery Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <AnimatePresence mode="popLayout">
-            {watermarkedImages.map((src, index) => (
-              <motion.div
-                key={index}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="relative group aspect-[3/4] rounded-xl overflow-hidden border border-gold/20"
-              >
-                <img
-                  src={src}
-                  alt={`Gallery Image ${index + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {images.map((src, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              className="relative group aspect-[3/4] rounded-xl overflow-hidden border border-gold/20 bg-emerald-dark/5"
+            >
+              {/* Skeleton placeholder */}
+              {!loaded[index] && (
+                <div className="absolute inset-0 animate-pulse bg-emerald-dark/10 rounded-xl" />
+              )}
+              <img
+                src={src}
+                alt={`Gallery Image ${index + 1}`}
+                className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${
+                  loaded[index] ? "opacity-100" : "opacity-0"
+                }`}
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setLoaded((prev) => ({ ...prev, [index]: true }))}
+              />
+              {/* CSS watermark overlay */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+                <span
+                  className="text-white/30 font-display tracking-widest text-lg md:text-2xl"
+                  style={{ transform: "rotate(-15deg)" }}
+                >
+                  Mynt Girlfriend
+                </span>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

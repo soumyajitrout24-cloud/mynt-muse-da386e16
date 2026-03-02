@@ -29,40 +29,26 @@ const LocationPage = () => {
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {areas.map((area: any, index: number) => {
-            const isIcon = area.image.includes("location-icon");
-
-            return (
-              <div
-                key={index}
-                className="relative rounded-2xl overflow-hidden border border-[#d4af37]/40 shadow-xl group cursor-pointer"
-              >
-                {/* Image / Icon */}
-                <img
-                  src={area.image}
-                  alt={area.name}
-                  className={`w-full h-64 transition duration-700 ${
-                    isIcon
-                      ? "object-contain p-12 bg-[#064e3b]"
-                      : "object-cover group-hover:scale-110"
-                  }`}
-                />
-
-                {/* Overlay (only for real images) */}
-                {!isIcon && (
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition" />
-                )}
-
-                {/* Text */}
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-[#d4af37]" />
-                  <p className="text-white text-lg uppercase tracking-wider">
-                    {area.name}
-                  </p>
-                </div>
+          {areas.map((area, index) => (
+            <div
+              key={index}
+              className="relative rounded-2xl overflow-hidden border border-[#d4af37]/40 shadow-xl group cursor-pointer"
+            >
+              <img
+                src={area.image}
+                alt={area.name}
+                className="w-full h-64 object-cover transition duration-700 group-hover:scale-110"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition" />
+              <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#d4af37]" />
+                <p className="text-white text-base md:text-lg uppercase tracking-wider">
+                  {area.name}
+                </p>
               </div>
-            );
-          })}
+            </div>
+          ))}
 
         </div>
       </div>
