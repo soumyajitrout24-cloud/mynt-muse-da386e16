@@ -1,5 +1,5 @@
 import React from "react";
-import WhatsAppLogo from "@/assets/Whatsyy.png"; // your WhatsApp logo
+import WhatsAppLogo from "@/spa/whatapp.png"; // your WhatsApp logo
 
 const WhatsAppCTA = () => {
   const phoneNumber = "YOUR_PHONE_NUMBER"; // e.g., 919876543210
