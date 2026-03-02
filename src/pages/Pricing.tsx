@@ -1,4 +1,4 @@
-import { Check, Phone } from "lucide-react";
+import { Check, Phone, Plane, Crown, ClipboardList, Sparkles } from "lucide-react";
 import FadeInSection from "@/components/FadeInSection";
 
 const plans = [
@@ -128,36 +128,93 @@ const Pricing = () => {
           ))}
         </div>
 
-        {/* Travel & Add-ons Section */}
-        <FadeInSection delay={0.5}>
-          <div className="mt-10 font-elegant text-sm md:text-base text-primary/45">
-            <h2 className="font-display text-xl md:text-2xl mb-3 text-gold">Travel & Outstation Experience</h2>
-            <p className="mb-3 text-primary/60">
+        {/* Travel & Outstation */}
+        <FadeInSection delay={0.4}>
+          <div className="mt-14 md:mt-20 rounded-2xl border border-primary/20 bg-card p-6 md:p-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+                <Plane className="w-5 h-5 text-gold" />
+              </div>
+              <h2 className="font-display text-xl md:text-2xl text-primary tracking-wide">
+                Travel & Outstation Experience
+              </h2>
+            </div>
+            <p className="font-elegant text-sm md:text-base text-primary/55 leading-relaxed max-w-2xl">
               Companion travel to premium locations, five-star accommodation required, customized itinerary planning. Pricing available upon private consultation.
             </p>
+          </div>
+        </FadeInSection>
 
-            <h2 className="font-display text-xl md:text-2xl mb-3 mt-6 text-gold">Exclusive Add-On Privileges</h2>
-            <ul className="list-disc list-inside space-y-2 text-primary/60">
-              {addOns.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+        {/* Add-Ons & Booking - Two Column */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Add-On Privileges */}
+          <FadeInSection delay={0.5}>
+            <div className="rounded-2xl border border-primary/20 bg-card p-6 md:p-8 h-full relative overflow-hidden">
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+                  <Crown className="w-5 h-5 text-gold" />
+                </div>
+                <h2 className="font-display text-lg md:text-xl text-primary tracking-wide">
+                  Exclusive Add-On Privileges
+                </h2>
+              </div>
+              <ul className="space-y-3">
+                {addOns.map((item) => (
+                  <li key={item} className="flex items-center gap-3 group">
+                    <Sparkles className="w-4 h-4 text-gold/60 flex-shrink-0 group-hover:text-gold transition" />
+                    <span className="font-elegant text-sm text-primary/60 group-hover:text-primary/80 transition">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </FadeInSection>
 
-            <h2 className="font-display text-xl md:text-2xl mb-3 mt-6 text-gold">Booking Guidelines</h2>
-            <ul className="list-decimal list-inside space-y-2 text-primary/60">
-              <li>Select your preferred plan</li>
-              <li>Choose your desired profile</li>
-              <li>Reserve a premium hotel or verified private venue</li>
-              <li>Share confirmed date, time, and venue details</li>
-              <li>Secure your reservation as per confirmation process</li>
-            </ul>
+          {/* Booking Guidelines */}
+          <FadeInSection delay={0.6}>
+            <div className="rounded-2xl border border-primary/20 bg-card p-6 md:p-8 h-full relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
+                  <ClipboardList className="w-5 h-5 text-gold" />
+                </div>
+                <h2 className="font-display text-lg md:text-xl text-primary tracking-wide">
+                  Booking Guidelines
+                </h2>
+              </div>
+              <ol className="space-y-3">
+                {[
+                  "Select your preferred plan",
+                  "Choose your desired profile",
+                  "Reserve a premium hotel or verified private venue",
+                  "Share confirmed date, time, and venue details",
+                  "Secure your reservation as per confirmation process",
+                ].map((step, i) => (
+                  <li key={i} className="flex items-start gap-3 group">
+                    <span className="w-6 h-6 rounded-full border border-gold/30 flex items-center justify-center text-xs text-gold font-semibold flex-shrink-0 mt-0.5 group-hover:bg-gold/10 transition">
+                      {i + 1}
+                    </span>
+                    <span className="font-elegant text-sm text-primary/60 group-hover:text-primary/80 transition">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </FadeInSection>
+        </div>
 
-            <p className="mt-4 italic text-primary/50">
+        {/* Closing Statement */}
+        <FadeInSection delay={0.7}>
+          <div className="mt-10 md:mt-14 text-center max-w-2xl mx-auto">
+            <p className="font-elegant text-sm md:text-base text-primary/45 leading-relaxed italic mb-4">
               All engagements are reserved in advance and allocated on a priority basis. We do not compete on price; we operate on value. Mynt Girlfriend is curated for individuals who understand that exclusivity commands investment.
             </p>
-
-            <p className="mt-4 italic text-primary/40 text-center">
-              Premium. Private. Precisely Executed. Exact pricing shared upon private inquiry. Discretion ensured.
+            <div className="gold-divider w-16 mx-auto my-5" />
+            <p className="font-display text-sm md:text-base tracking-[0.2em] text-gold/70">
+              Premium · Private · Precisely Executed
+            </p>
+            <p className="font-elegant text-xs md:text-sm text-primary/35 mt-2">
+              Exact pricing shared upon private inquiry. Discretion ensured.
             </p>
           </div>
         </FadeInSection>
