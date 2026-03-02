@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import FadeInSection from "@/components/FadeInSection";
 
@@ -28,11 +28,69 @@ const images = [
   img121, img122, img123, img124, img125, img126, img127, img128, img129, img130,
 ];
 
+const watermarkImage = (src: string): Promise<string> =>
+  new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = src;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+
+      // Tiled diagonal watermarks
+      const text = "Mynt Girlfriend";
+      const fontSize = Math.max(16, Math.floor(canvas.width / 14));
+      ctx.font = `600 ${fontSize}px sans-serif`;
+      ctx.fillStyle = "rgba(255,255,255,0.18)";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const gap = fontSize * 5;
+      ctx.save();
+      ctx.rotate(-0.35);
+      for (let y = -canvas.height; y < canvas.height * 2; y += gap) {
+        for (let x = -canvas.width; x < canvas.width * 2; x += gap) {
+          ctx.fillText(text, x, y);
+        }
+      }
+      ctx.restore();
+
+      resolve(canvas.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = () => resolve(src);
+  });
+
 const Gallery = () => {
-  const [loaded, setLoaded] = useState<Record<number, boolean>>({});
+  const [wmImages, setWmImages] = useState<(string | null)[]>(
+    () => new Array(images.length).fill(null)
+  );
+
+  const processImages = useCallback(async () => {
+    // Process all in parallel for speed
+    const promises = images.map((src, i) =>
+      watermarkImage(src).then((result) => {
+        setWmImages((prev) => {
+          const next = [...prev];
+          next[i] = result;
+          return next;
+        });
+      })
+    );
+    await Promise.all(promises);
+  }, []);
+
+  useEffect(() => {
+    processImages();
+  }, [processImages]);
 
   return (
-    <div className="bg-pink-page min-h-screen pt-24 pb-16 px-6">
+    <div
+      className="bg-pink-page min-h-screen pt-24 pb-16 px-6"
+      onContextMenu={(e) => e.preventDefault()}
+    >
       <div className="container mx-auto max-w-6xl">
         <FadeInSection>
           <div className="text-center mb-5 md:mb-6">
@@ -55,37 +113,26 @@ const Gallery = () => {
         </FadeInSection>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {images.map((src, index) => (
+          {wmImages.map((src, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="relative group aspect-[3/4] rounded-xl overflow-hidden border border-gold/20 bg-emerald-dark/5"
+              animate={{ opacity: src ? 1 : 0.4, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.03 }}
+              className="relative group aspect-[3/4] rounded-xl overflow-hidden border border-gold/20 bg-emerald-dark/5 select-none"
+              style={{ WebkitUserDrag: "none" } as React.CSSProperties}
             >
-              {/* Skeleton placeholder */}
-              {!loaded[index] && (
+              {!src ? (
                 <div className="absolute inset-0 animate-pulse bg-emerald-dark/10 rounded-xl" />
+              ) : (
+                <img
+                  src={src}
+                  alt={`Gallery ${index + 1}`}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 pointer-events-none select-none"
+                  draggable={false}
+                  loading="lazy"
+                />
               )}
-              <img
-                src={src}
-                alt={`Gallery Image ${index + 1}`}
-                className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${
-                  loaded[index] ? "opacity-100" : "opacity-0"
-                }`}
-                loading="lazy"
-                decoding="async"
-                onLoad={() => setLoaded((prev) => ({ ...prev, [index]: true }))}
-              />
-              {/* CSS watermark overlay */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-                <span
-                  className="text-white/30 font-display tracking-widest text-lg md:text-2xl"
-                  style={{ transform: "rotate(-15deg)" }}
-                >
-                  Mynt Girlfriend
-                </span>
-              </div>
             </motion.div>
           ))}
         </div>
