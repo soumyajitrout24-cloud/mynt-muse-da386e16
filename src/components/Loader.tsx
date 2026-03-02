@@ -1,38 +1,44 @@
 const Loader = () => {
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center z-[9999] overflow-hidden bg-gradient-to-br from-[#022c22] via-[#064e3b] to-black">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-gradient-to-br from-emerald-900 via-emerald-800 to-black overflow-hidden">
 
-      {/* Royal Gold Ambient Glow */}
-      <div className="absolute w-[600px] h-[600px] bg-yellow-400/10 rounded-full blur-3xl animate-pulse"></div>
+      {/* Luxury Glow Background Effect */}
+      <div className="absolute w-[500px] h-[500px] bg-yellow-400 opacity-10 rounded-full blur-3xl animate-pulse"></div>
 
-      {/* Logo */}
-      <img
-        src="/logoo.png"
-        alt="Mynt Girlfriend"
-        className="w-44 md:w-60 mb-10 drop-shadow-[0_0_35px_rgba(255,215,0,0.6)]"
-      />
+      {/* Glass Card */}
+      <div className="relative flex flex-col items-center backdrop-blur-xl bg-white/5 border border-yellow-400/20 rounded-3xl px-12 py-14 shadow-2xl">
 
-      {/* Welcome Text */}
-      <h1 className="text-3xl md:text-4xl font-serif tracking-wide text-yellow-400 mb-2">
-        Welcome to
-      </h1>
+        {/* Logo with Glow Ring */}
+        <div className="relative mb-8">
+          <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-ping opacity-40"></div>
+          <img
+            src="/logoo.png"
+            alt="Mynt Girlfriend"
+            className="w-40 md:w-56 drop-shadow-[0_0_25px_rgba(255,215,0,0.5)]"
+          />
+        </div>
 
-      <h2 className="text-xl md:text-2xl text-emerald-100 tracking-[0.3em] uppercase mb-12">
-        Mynt Girlfriend
-      </h2>
+        {/* Welcome Text */}
+        <h1 className="text-2xl md:text-3xl font-semibold text-yellow-400 tracking-wide mb-2">
+          Welcome to
+        </h1>
 
-      {/* Royal Loading Indicator */}
-      <div className="flex gap-4">
-        <span className="w-3 h-3 rounded-full bg-yellow-400 animate-bounce shadow-[0_0_20px_rgba(255,215,0,0.9)]"></span>
-        <span className="w-3 h-3 rounded-full bg-yellow-400 animate-bounce delay-150 shadow-[0_0_20px_rgba(255,215,0,0.9)]"></span>
-        <span className="w-3 h-3 rounded-full bg-yellow-400 animate-bounce delay-300 shadow-[0_0_20px_rgba(255,215,0,0.9)]"></span>
+        <h2 className="text-xl md:text-2xl text-white font-light mb-10">
+          Mynt Girlfriend
+        </h2>
+
+        {/* Premium Loader Dots */}
+        <div className="flex gap-4">
+          <span className="w-3 h-3 rounded-full bg-yellow-400 animate-bounce shadow-[0_0_15px_rgba(255,215,0,0.9)]"></span>
+          <span className="w-3 h-3 rounded-full bg-yellow-400 animate-bounce delay-150 shadow-[0_0_15px_rgba(255,215,0,0.9)]"></span>
+          <span className="w-3 h-3 rounded-full bg-yellow-400 animate-bounce delay-300 shadow-[0_0_15px_rgba(255,215,0,0.9)]"></span>
+        </div>
+
+        {/* Subtle Tagline */}
+        <p className="text-xs text-gray-300 mt-8 tracking-widest uppercase">
+          Crafting Luxury Experiences
+        </p>
       </div>
-
-      {/* Royal Tagline */}
-      <p className="absolute bottom-10 text-emerald-200/70 tracking-[0.4em] text-xs uppercase">
-        Luxury • Elegance • Desire
-      </p>
-
     </div>
   );
 };
