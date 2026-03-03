@@ -165,7 +165,7 @@ const Index = () => {
               <Link
                 to="/contact"
                 className="inline-block bg-gold text-emerald-900 font-body text-xs tracking-[0.2em] uppercase px-10 py-4 rounded-full
-                           shadow-[0_0_20px_rgba(255,215,0,0.5)] hover:shadow-[0_0_25px_rgba(255,215,0,0.7)]
+                           shadow-gold hover:opacity-90
                            transition-all duration-300"
               >
                 Book Now

@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
+import ScrollToTop from "@/components/ScrollToTop";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -50,6 +51,7 @@ function App() {
         <Sonner />
 
         <BrowserRouter>
+          <ScrollToTop />
           <Navbar />
 
           <Routes>

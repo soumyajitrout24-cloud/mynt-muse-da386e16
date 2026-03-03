@@ -67,7 +67,7 @@ const BookingPolicy = () => {
   ];
 
   return (
-    <div className="bg-emerald-gradient min-h-screen pt-24 pb-16 px-6 relative overflow-hidden">
+    <div className="bg-emerald-gradient min-h-screen pt-24 pb-16 px-4 sm:px-6 relative overflow-hidden">
       {/* Background glowing circles */}
       <div className="absolute w-96 h-96 rounded-full bg-primary/10 blur-3xl top-20 left-1/4 pointer-events-none"></div>
       <div className="absolute w-80 h-80 rounded-full bg-primary/10 blur-3xl bottom-32 right-1/4 pointer-events-none"></div>
@@ -79,44 +79,44 @@ const BookingPolicy = () => {
             <p className="font-elegant text-xs md:text-sm tracking-[0.3em] uppercase text-primary/50 mb-3">
               Terms
             </p>
-            <h1 className="font-display text-4xl md:text-6xl tracking-wider text-primary">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-6xl tracking-wider text-primary">
               Booking Policy
             </h1>
-            <div className="w-24 h-1 mx-auto mt-4 bg-gradient-to-r from-yellow-400 to-yellow-200 rounded-full" />
+            <div className="gold-divider w-24 mx-auto mt-4" />
           </div>
         </FadeInSection>
 
         {/* Intro */}
         <FadeInSection delay={0.2}>
-          <div className="bg-card rounded-3xl p-8 md:p-12 mb-16 shadow-xl border border-yellow-400/20">
-            <p className="font-elegant text-base md:text-lg text-primary/60 leading-relaxed text-center">
+          <div className="bg-card rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 mb-12 md:mb-16 shadow-luxury border border-primary/20">
+            <p className="font-elegant text-sm sm:text-base md:text-lg text-primary/60 leading-relaxed text-center">
               At Mynt Girlfriend, every engagement is curated with discretion, professionalism, and attention to detail. To ensure a seamless and refined experience, kindly follow the booking process outlined below.
             </p>
           </div>
         </FadeInSection>
 
-        {/* Timeline */}
+        {/* Timeline - mobile: simple stack, desktop: alternating */}
         <div className="relative">
-          {/* Vertical gold line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-yellow-400 to-yellow-200 rounded-full"></div>
+          {/* Vertical line - hidden on mobile */}
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-[2px] bg-gradient-to-b from-primary/40 via-primary/20 to-primary/40 rounded-full"></div>
 
-          <div className="space-y-16">
+          <div className="space-y-6 md:space-y-16">
             {steps.map((step, i) => (
               <FadeInSection key={i} delay={0.2 + i * 0.1}>
-                <div className={`flex items-start ${i % 2 === 0 ? 'justify-start md:justify-end' : 'justify-end md:justify-start'} relative`}>
+                <div className={`flex items-start relative ${i % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
                   {/* Step Card */}
-                  <div className="max-w-md bg-card rounded-3xl p-6 md:p-8 shadow-2xl border border-yellow-400/20 hover:scale-105 transition-transform duration-300 relative z-10">
+                  <div className="w-full md:max-w-md bg-card rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-8 shadow-luxury border border-primary/20 hover:border-primary/40 transition-all duration-300 relative z-10">
                     <div className="flex items-center mb-3">
-                      <div className="text-yellow-400 text-2xl mr-3">{step.icon}</div>
-                      <h3 className="font-display text-lg md:text-xl text-primary font-semibold">{step.title}</h3>
+                      <div className="text-xl md:text-2xl mr-3">{step.icon}</div>
+                      <h3 className="font-display text-base sm:text-lg md:text-xl text-primary font-semibold">{step.title}</h3>
                     </div>
-                    <div className="font-elegant text-sm md:text-base text-primary/60 leading-relaxed">
+                    <div className="font-elegant text-xs sm:text-sm md:text-base text-primary/60 leading-relaxed">
                       {step.description}
                     </div>
                   </div>
 
-                  {/* Circular Badge */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 top-8 w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-200 flex items-center justify-center text-2xl font-bold text-primary shadow-lg border-4 border-yellow-400">
+                  {/* Circular Badge - hidden on mobile */}
+                  <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 top-8 w-12 h-12 rounded-full bg-card border-2 border-primary/40 items-center justify-center text-lg font-bold text-primary shadow-gold">
                     {i + 1}
                   </div>
                 </div>
@@ -127,9 +127,9 @@ const BookingPolicy = () => {
 
         {/* Important Notes */}
         <FadeInSection delay={0.5}>
-          <div className="bg-card rounded-3xl p-8 md:p-12 mt-24 shadow-2xl border border-yellow-400/20">
-            <h2 className="font-display text-2xl md:text-3xl text-primary mb-6 text-center">Important Notes</h2>
-            <ul className="list-disc list-inside space-y-3 font-elegant text-primary/60 text-base md:text-lg leading-relaxed">
+          <div className="bg-card rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 mt-16 md:mt-24 shadow-luxury border border-primary/20">
+            <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-primary mb-5 md:mb-6 text-center">Important Notes</h2>
+            <ul className="list-disc list-inside space-y-2 md:space-y-3 font-elegant text-primary/60 text-sm sm:text-base md:text-lg leading-relaxed">
               {notes.map((note, i) => (
                 <li key={i}>{note}</li>
               ))}
@@ -139,12 +139,12 @@ const BookingPolicy = () => {
 
         {/* Commitment */}
         <FadeInSection delay={0.5}>
-          <div className="bg-card rounded-3xl p-8 md:p-12 mt-16 shadow-2xl border border-yellow-400/20 text-center">
-            <h2 className="font-display text-2xl md:text-3xl text-primary mb-4">Our Commitment</h2>
-            <p className="font-elegant text-base md:text-lg text-primary/60 leading-relaxed">
+          <div className="bg-card rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 mt-8 md:mt-16 shadow-luxury border border-primary/20 text-center">
+            <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-primary mb-4">Our Commitment</h2>
+            <p className="font-elegant text-sm sm:text-base md:text-lg text-primary/60 leading-relaxed">
               We deliver a refined, private, and seamless companionship experience tailored for discerning individuals who value elegance, privacy, and premium standards.
             </p>
-            <p className="font-elegant text-base md:text-lg text-primary/60 leading-relaxed mt-2">
+            <p className="font-elegant text-sm sm:text-base md:text-lg text-primary/60 leading-relaxed mt-2">
               Plan in advance. Book with clarity. Experience exclusivity.
             </p>
           </div>
