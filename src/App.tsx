@@ -29,60 +29,35 @@ const queryClient = new QueryClient();
 function App() {
   const [loading, setLoading] = useState(true);
 
-  // 🔐 GLOBAL PROTECTION EFFECT
+  /* ================= PROTECTION (PRODUCTION ONLY) ================= */
   useEffect(() => {
-    // Disable right click
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-
-    // Disable common shortcuts
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        (e.ctrlKey && ["c", "u", "s"].includes(e.key.toLowerCase())) ||
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") ||
-        (e.metaKey && e.key.toLowerCase() === "c") // Mac
-      ) {
+    // Only enable protection in production build
+    if (import.meta.env.PROD) {
+      const handleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
-      }
-    };
+      };
 
-    // Basic DevTools detection (deterrent only)
-    const detectDevTools = () => {
-      const threshold = 160;
-      if (
-        window.outerWidth - window.innerWidth > threshold ||
-        window.outerHeight - window.innerHeight > threshold
-      ) {
-        document.body.innerHTML = `
-          <div style="
-            height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#0f0f0f;
-            color:#d4af37;
-            font-size:24px;
-            font-family:sans-serif;
-          ">
-            Developer tools are not allowed.
-          </div>
-        `;
-      }
-    };
+      const handleKeyDown = (e: KeyboardEvent) => {
+        // Block copy & view source only
+        if (
+          (e.ctrlKey && ["c", "u"].includes(e.key.toLowerCase())) ||
+          (e.metaKey && e.key.toLowerCase() === "c")
+        ) {
+          e.preventDefault();
+        }
+      };
 
-    document.addEventListener("contextmenu", handleContextMenu);
-    document.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("resize", detectDevTools);
+      document.addEventListener("contextmenu", handleContextMenu);
+      document.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("resize", detectDevTools);
-    };
+      return () => {
+        document.removeEventListener("contextmenu", handleContextMenu);
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
   }, []);
 
-  // Loader timer
+  /* ================= LOADER ================= */
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
