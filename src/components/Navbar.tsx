@@ -80,8 +80,8 @@ const Navbar = () => {
             style={{
               background: "linear-gradient(180deg, hsl(158 65% 11%) 0%, hsl(156 62% 15%) 50%, hsl(158 65% 11%) 100%)",
               borderRadius: "0 48px 48px 0",
-              borderRight: "1px solid hsl(25 55% 40% / 0.35)",
-              boxShadow: "8px 0 60px hsl(0 0% 0% / 0.5), 4px 0 20px hsl(25 55% 46% / 0.08)",
+              borderRight: "1px solid hsl(24 72% 52% / 0.35)",
+              boxShadow: "8px 0 60px hsl(0 0% 0% / 0.5), 4px 0 20px hsl(24 72% 62% / 0.08)",
             }}
           >
             {/* Gold shine overlay */}
@@ -89,7 +89,7 @@ const Navbar = () => {
               className="absolute inset-0 pointer-events-none"
               style={{
                 borderRadius: "0 48px 48px 0",
-                background: "linear-gradient(160deg, hsl(25 55% 46% / 0.04) 0%, transparent 40%, hsl(25 55% 46% / 0.02) 100%)",
+                background: "linear-gradient(160deg, hsl(24 72% 62% / 0.04) 0%, transparent 40%, hsl(24 72% 62% / 0.02) 100%)",
               }}
             />
 
@@ -139,7 +139,7 @@ const Navbar = () => {
                       <motion.span
                         layoutId="nav-indicator"
                         className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"
-                        style={{ boxShadow: "0 0 8px hsl(25 55% 46% / 0.6)" }}
+                        style={{ boxShadow: "0 0 8px hsl(24 72% 62% / 0.6)" }}
                       />
                     )}
                     <span className="relative">

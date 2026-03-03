@@ -9,24 +9,24 @@
 @layer base {
   :root {
     --background: 156 62% 15%;
-    --foreground: 25 55% 46%;
+    --foreground: 24 72% 62%;
 
     --card: 158 65% 11%;
-    --card-foreground: 25 55% 46%;
+    --card-foreground: 24 72% 62%;
 
-    --primary: 25 55% 46%;
+    --primary: 24 72% 62%;
     --secondary: 156 50% 20%;
 
-    --border: 25 55% 46% / 0.2;
-    --ring: 25 55% 46%;
+    --border: 24 72% 62% / 0.2;
+    --ring: 24 72% 62%;
 
     --radius: 0.5rem;
 
     --emerald: 156 62% 15%;
     --emerald-dark: 158 65% 11%;
-    --gold: 25 55% 46%;
-    --gold-light: 25 55% 58%;
-    --gold-glow: 25 55% 46% / 0.4;
+    --gold: 24 72% 62%;
+    --gold-light: 24 72% 72%;
+    --gold-glow: 24 72% 62% / 0.4;
     --baby-pink: 0 60% 90%;
 
     --font-display: 'Playfair Display', serif;
@@ -34,7 +34,7 @@
     --font-elegant: 'Cormorant Garamond', serif;
 
     --gradient-emerald: linear-gradient(180deg, hsl(156 62% 15%), hsl(158 65% 11%));
-    --shadow-gold: 0 4px 30px hsl(25 55% 46% / 0.15);
+    --shadow-gold: 0 4px 30px hsl(24 72% 62% / 0.2);
     --shadow-luxury: 0 10px 40px hsl(0 0% 0% / 0.3);
   }
 }
@@ -182,18 +182,20 @@
 .gold-metallic {
   background: linear-gradient(
     135deg,
-    #f5d0b0 0%,
-    hsl(var(--gold)) 25%,
-    #ffffff 40%,
-    hsl(var(--gold)) 55%,
-    #8B5E3C 75%,
+    #f5c8a0 0%,
+    hsl(var(--gold)) 20%,
+    #ffe8d6 35%,
+    #ffffff 45%,
+    #e8a87c 55%,
+    hsl(var(--gold)) 70%,
+    #c07040 85%,
     hsl(var(--gold)) 100%
   );
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: goldShimmer 4s ease-in-out infinite;
+  animation: goldShimmer 3s ease-in-out infinite;
 }
 
 @keyframes goldShimmer {
