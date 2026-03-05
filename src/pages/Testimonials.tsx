@@ -13,6 +13,8 @@ interface Review {
 
 const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
+const API_URL = "https://sheetdb.io/api/v1/yjqjpfl7iz1fz";
+
 const Testimonials = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [form, setForm] = useState({ name: "", review: "", rating: 5, location: "" });
@@ -20,19 +22,26 @@ const Testimonials = () => {
   const [honeypot, setHoneypot] = useState("");
   const [lastSubmit, setLastSubmit] = useState(0);
 
+  /* FETCH REVIEWS FROM SHEETDB */
+
   useEffect(() => {
-    const stored = localStorage.getItem("testimonials");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as Review[];
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        const parsed: Review[] = data.map((r: any) => ({
+          name: r.name,
+          review: r.review,
+          rating: Number(r.rating),
+          location: r.location,
+          timestamp: Number(r.timestamp),
+        }));
+
         setReviews(parsed.sort((a, b) => b.timestamp - a.timestamp));
-      } catch {
-        setReviews([]);
-      }
-    }
+      })
+      .catch(() => setReviews([]));
   }, []);
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (honeypot) return;
@@ -65,15 +74,27 @@ const Testimonials = () => {
       timestamp: Date.now(),
     };
 
-    const stored = localStorage.getItem("testimonials");
-    const userReviews = stored ? JSON.parse(stored) as Review[] : [];
-    userReviews.push(newReview);
-    localStorage.setItem("testimonials", JSON.stringify(userReviews));
+    try {
+      await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: newReview,
+        }),
+      });
 
-    setReviews([newReview, ...reviews]);
-    setForm({ name: "", review: "", rating: 5, location: "" });
-    setErrors({});
-    setLastSubmit(Date.now());
+      setReviews([newReview, ...reviews]);
+
+      setForm({ name: "", review: "", rating: 5, location: "" });
+      setErrors({});
+      setLastSubmit(Date.now());
+
+    } catch {
+      setErrors({ form: "Failed to submit review." });
+    }
+
   }, [form, honeypot, lastSubmit, reviews]);
 
   return (
@@ -113,10 +134,13 @@ const Testimonials = () => {
                       <Star key={`e-${j}`} className="w-4 h-4 text-primary/20" />
                     ))}
                   </div>
+
                   <p className="font-elegant text-sm md:text-base text-primary/60 leading-relaxed mb-5 italic">
                     "{t.review}"
                   </p>
+
                   <div className="gold-divider w-8 mb-3" />
+
                   <p className="font-body text-xs md:text-sm text-primary tracking-wide">
                     — {t.name}, {t.location}
                   </p>
@@ -144,6 +168,7 @@ const Testimonials = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+
               <input
                 type="text"
                 name="website"
@@ -206,7 +231,6 @@ const Testimonials = () => {
                 </select>
               </div>
 
-              {/* ✅ Only Change Here */}
               <button
                 type="submit"
                 className="w-full bg-primary text-emerald-900 font-body text-sm tracking-[0.2em] uppercase py-3.5 rounded-lg hover:opacity-90 transition-opacity duration-300"
