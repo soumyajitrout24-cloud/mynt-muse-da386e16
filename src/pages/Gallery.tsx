@@ -101,7 +101,7 @@ const Gallery = () => {
         <FadeInSection delay={0.1}>
           <div className="text-center mb-10 md:mb-12 max-w-2xl mx-auto">
             <p className="font-elegant text-sm md:text-base text-emerald-dark/50 leading-relaxed mb-2">
-              Hellllloooooooo Explore our carefully curated portfolio of models — each verified and presented with true, unedited images and professional details.
+              Explore our carefully curated portfolio of models — each verified and presented with true, unedited images and professional details.
             </p>
             <p className="font-elegant text-sm md:text-base text-emerald-dark/50 leading-relaxed">
               No exaggerated claims, no filters — real profiles, real talent.
