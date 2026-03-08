@@ -95,7 +95,7 @@ const LocationPage = () => {
           <div className="text-center mb-12">
             <p className="font-elegant text-xs tracking-[0.3em] uppercase text-primary/50 mb-3">Explore</p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl text-primary uppercase tracking-wider font-display">
-              {normalizedCity}
+              {displayCity}
             </h1>
             <div className="gold-divider w-20 mx-auto mt-4" />
           </div>
