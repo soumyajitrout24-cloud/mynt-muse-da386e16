@@ -6,20 +6,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { locationData } from "../../lib/locationData";
 import FadeInSection from "@/components/FadeInSection";
 
-
+const CITY_ALIASES: Record<string, string> = {
+  banglore: "bangalore",
+};
 
 const LocationPage = () => {
   const { city } = useParams();
   const cityLower = city?.toLowerCase() || "";
+  const normalizedCity = CITY_ALIASES[cityLower] || cityLower;
+  const displayCity = normalizedCity ? normalizedCity.charAt(0).toUpperCase() + normalizedCity.slice(1) : "";
 
   // Fetch locations from DB
   const { data: dbLocations, isLoading } = useQuery({
-    queryKey: ["locations_by_city", cityLower],
+    queryKey: ["locations_by_city", normalizedCity],
     queryFn: async () => {
       const { data } = await supabase
         .from("locations")
         .select("*")
-        .ilike("city", cityLower)
+        .ilike("city", normalizedCity)
+        .eq("is_active", true)
         .order("display_order");
       return data;
     },
@@ -27,25 +32,23 @@ const LocationPage = () => {
     refetchOnWindowFocus: true,
   });
 
-  // Fetch featured model images for this city
+  // Fetch featured model images for this city (DB only)
   const { data: featuredModelImages } = useQuery({
-    queryKey: ["featured_models", cityLower],
+    queryKey: ["featured_models", normalizedCity],
     queryFn: async () => {
       const { data } = await supabase
         .from("featured_models")
         .select("image_url")
-        .ilike("location_name", cityLower)
+        .ilike("location_name", normalizedCity)
         .eq("is_active", true)
         .order("display_order");
-      return data?.length ? data.map((d) => d.image_url) : null;
+      return data?.map((d) => d.image_url) || [];
     },
     staleTime: 30 * 1000,
     refetchOnWindowFocus: true,
   });
 
-  const allModelImages = featuredModelImages || [];
-
-  // Use DB locations if available, fallback to static data
+  // Use DB locations if available, fallback to static area data only
   const areas = useMemo(() => {
     if (dbLocations?.length) {
       return dbLocations.map((loc) => ({
@@ -53,14 +56,14 @@ const LocationPage = () => {
         image: loc.image_url || "",
       }));
     }
-    return locationData[cityLower] || null;
-  }, [dbLocations, cityLower]);
+    return locationData[normalizedCity] || null;
+  }, [dbLocations, normalizedCity]);
 
-  /* pick 6 random models */
+  /* pick 6 random featured models from DB */
   const randomModels = useMemo(() => {
-    const shuffled = [...allModelImages].sort(() => 0.5 - Math.random());
+    const shuffled = [...featuredModelImages].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 6);
-  }, [allModelImages]);
+  }, [featuredModelImages]);
 
   if (isLoading) {
     return (
@@ -93,7 +96,7 @@ const LocationPage = () => {
           <div className="text-center mb-12">
             <p className="font-elegant text-xs tracking-[0.3em] uppercase text-primary/50 mb-3">Explore</p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl text-primary uppercase tracking-wider font-display">
-              {city}
+              {displayCity}
             </h1>
             <div className="gold-divider w-20 mx-auto mt-4" />
           </div>
