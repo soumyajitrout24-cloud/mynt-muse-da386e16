@@ -4,15 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { LogOut, Image, Briefcase, DollarSign, MapPin, Phone, Lock, Eye, EyeOff } from "lucide-react";
+import { LogOut, Image, Briefcase, DollarSign, MapPin, Phone, Lock, Eye, EyeOff, Users } from "lucide-react";
 import AdminGallery from "./AdminGallery";
 import AdminServices from "./AdminServices";
 import AdminPricing from "./AdminPricing";
 import AdminLocations from "./AdminLocations";
 import AdminContact from "./AdminContact";
+import AdminFeaturedModels from "./AdminFeaturedModels";
 
 const tabs = [
   { id: "gallery", label: "Gallery", icon: Image },
+  { id: "featured", label: "Featured Models", icon: Users },
   { id: "services", label: "Services", icon: Briefcase },
   { id: "pricing", label: "Pricing", icon: DollarSign },
   { id: "locations", label: "Locations", icon: MapPin },
