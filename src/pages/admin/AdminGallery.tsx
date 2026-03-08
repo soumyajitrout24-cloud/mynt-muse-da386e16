@@ -161,13 +161,10 @@ const AdminGallery = () => {
   const deleteAll = async () => {
     setClearConfirm(false);
     const paths = images
-      .map((img) => {
-        const parts = img.image_url.split("/gallery/");
-        return parts[1] ? decodeURIComponent(parts[1]) : null;
-      })
+      .map((img) => extractStoragePath(img.image_url, GALLERY_BUCKET))
       .filter(Boolean) as string[];
-    if (paths.length) await supabase.storage.from("gallery").remove(paths);
-    for (const img of images) {
+    if (paths.length) await supabase.storage.from(GALLERY_BUCKET).remove(paths);
+    await supabase.from("gallery_images").delete().in("id", images.map((img) => img.id));
       await supabase.from("gallery_images").delete().eq("id", img.id);
     }
     toast.success("All images deleted");
