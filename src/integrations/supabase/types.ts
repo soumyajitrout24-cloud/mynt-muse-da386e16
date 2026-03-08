@@ -67,6 +67,7 @@ export type Database = {
           id: string
           image_url: string
           is_active: boolean
+          location_name: string
         }
         Insert: {
           city: string
@@ -75,6 +76,7 @@ export type Database = {
           id?: string
           image_url: string
           is_active?: boolean
+          location_name: string
         }
         Update: {
           city?: string
@@ -83,6 +85,7 @@ export type Database = {
           id?: string
           image_url?: string
           is_active?: boolean
+          location_name?: string
         }
         Relationships: []
       }
