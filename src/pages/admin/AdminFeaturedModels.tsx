@@ -171,7 +171,7 @@ const AdminFeaturedModels = () => {
   };
 
   const grouped = CITIES.reduce((acc, city) => {
-    acc[city] = models.filter((m) => m.city.toLowerCase() === city.toLowerCase());
+    acc[city] = models.filter((m) => m.location_name.toLowerCase() === city.toLowerCase());
     return acc;
   }, {} as Record<string, FeaturedModel[]>);
 
