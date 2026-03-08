@@ -94,7 +94,7 @@ function App() {
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/booking-policy" element={<BookingPolicy />} />
                     <Route path="/locations/:city" element={<LocationPage />} />
-                    <Route path="/proposal" element={<Proposal />} />
+                    
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                   <Footer />
