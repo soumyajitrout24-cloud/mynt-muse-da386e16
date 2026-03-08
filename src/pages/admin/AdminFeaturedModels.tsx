@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
   Trash2, Upload, X, AlertTriangle, ImageIcon, RefreshCw,
-  ChevronDown, ChevronUp, Users, Download,
+  ChevronDown, ChevronUp, Users,
 } from "lucide-react";
 
 
