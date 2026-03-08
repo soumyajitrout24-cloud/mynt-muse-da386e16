@@ -160,9 +160,9 @@ const AdminFeaturedModels = () => {
   const handleDelete = async (model: FeaturedModel) => {
     setDeleting(model.id);
     setDeleteConfirm(null);
-    const urlParts = model.image_url.split("/gallery/");
-    if (urlParts[1]) {
-      await supabase.storage.from("gallery").remove([decodeURIComponent(urlParts[1])]);
+    const storagePath = extractStoragePath(model.image_url, FEATURED_BUCKET);
+    if (storagePath) {
+      await supabase.storage.from(FEATURED_BUCKET).remove([storagePath]);
     }
     await supabase.from("featured_models").delete().eq("id", model.id);
     toast.success("Model image deleted");
