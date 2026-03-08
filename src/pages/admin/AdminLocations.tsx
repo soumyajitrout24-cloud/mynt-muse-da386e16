@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, Edit2, Eye, EyeOff, MapPin } from "lucide-react";
+import { Plus, Trash2, Save, Edit2, Eye, EyeOff, MapPin, Upload, Image as ImageIcon } from "lucide-react";
 
 type Location = {
   id: string;
@@ -19,6 +19,7 @@ const AdminLocations = () => {
   const [editing, setEditing] = useState<Location | null>(null);
   const [newCity, setNewCity] = useState("");
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   const fetchLocations = async () => {
     const { data } = await supabase.from("locations").select("*").order("city").order("display_order");
@@ -28,12 +29,30 @@ const AdminLocations = () => {
 
   useEffect(() => { fetchLocations(); }, []);
 
-  // Get unique cities from existing data
   const cities = [...new Set(locations.map((l) => l.city))].sort();
 
   const startNew = (city?: string) => {
     setEditing({ id: "", city: city || "", area_name: "", image_url: "", display_order: 0, is_active: true });
     setNewCity("");
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editing) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `locations/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from("gallery").upload(path, file);
+    if (error) {
+      toast.error("Upload failed");
+      setUploading(false);
+      return;
+    }
+    const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(path);
+    setEditing({ ...editing, image_url: urlData.publicUrl });
+    toast.success("Image uploaded");
+    setUploading(false);
+    e.target.value = "";
   };
 
   const handleSave = async () => {
@@ -63,6 +82,16 @@ const AdminLocations = () => {
     fetchLocations();
   };
 
+  const deleteCity = async (city: string) => {
+    if (!confirm(`Delete ALL areas under "${city}"? This cannot be undone.`)) return;
+    const cityLocs = locations.filter((l) => l.city === city);
+    for (const loc of cityLocs) {
+      await supabase.from("locations").delete().eq("id", loc.id);
+    }
+    toast.success(`All areas in ${city} deleted`);
+    fetchLocations();
+  };
+
   const toggleActive = async (loc: Location) => {
     await supabase.from("locations").update({ is_active: !loc.is_active }).eq("id", loc.id);
     fetchLocations();
@@ -78,7 +107,10 @@ const AdminLocations = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg sm:text-xl text-primary tracking-wider">Locations</h2>
+        <div>
+          <h2 className="font-display text-lg sm:text-xl text-primary tracking-wider">Locations</h2>
+          <p className="text-xs text-primary/40 font-body">{locations.length} areas across {cities.length} cities</p>
+        </div>
         <Button onClick={() => startNew()} className="bg-gold text-emerald-dark hover:bg-gold/90 text-xs sm:text-sm">
           <Plus className="w-4 h-4 mr-1.5" /> Add Area
         </Button>
@@ -105,7 +137,29 @@ const AdminLocations = () => {
             <Input placeholder="City" value={editing.city} onChange={(e) => setEditing({ ...editing, city: e.target.value })} className="bg-background/50 border-primary/20 text-primary text-sm" />
           )}
           <Input placeholder="Area name" value={editing.area_name} onChange={(e) => setEditing({ ...editing, area_name: e.target.value })} className="bg-background/50 border-primary/20 text-primary text-sm" />
-          <Input placeholder="Image URL (optional)" value={editing.image_url || ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value })} className="bg-background/50 border-primary/20 text-primary text-sm" />
+          
+          {/* Image upload section */}
+          <div className="space-y-2">
+            <label className="text-xs text-primary/50 font-body flex items-center gap-1.5">
+              <ImageIcon className="w-3 h-3" /> Area Image
+            </label>
+            {editing.image_url && (
+              <div className="relative w-24 h-16 rounded-lg overflow-hidden border border-primary/20">
+                <img src={editing.image_url} alt="" className="w-full h-full object-cover" />
+                <button onClick={() => setEditing({ ...editing, image_url: "" })} className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500/80 rounded-full flex items-center justify-center text-white text-[8px]">×</button>
+              </div>
+            )}
+            <div className="flex gap-2">
+              <Input placeholder="Image URL" value={editing.image_url || ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value })} className="bg-background/50 border-primary/20 text-primary text-sm flex-1" />
+              <label className="cursor-pointer">
+                <Button disabled={uploading} size="sm" variant="outline" className="border-primary/20 text-primary text-xs" asChild>
+                  <span><Upload className="w-3 h-3 mr-1" />{uploading ? "..." : "Upload"}</span>
+                </Button>
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </label>
+            </div>
+          </div>
+
           <div className="flex gap-2">
             <Button onClick={handleSave} size="sm" className="bg-gold text-emerald-dark text-xs"><Save className="w-3.5 h-3.5 mr-1.5" /> Save</Button>
             <Button onClick={() => setEditing(null)} variant="ghost" size="sm" className="text-primary/50 text-xs">Cancel</Button>
@@ -122,12 +176,20 @@ const AdminLocations = () => {
         cities.map((city) => (
           <div key={city} className="space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-base sm:text-lg text-primary">{city}</h3>
-              <button onClick={() => startNew(city)} className="text-[10px] text-gold/60 hover:text-gold font-body tracking-wider uppercase">+ Add area</button>
+              <h3 className="font-display text-base sm:text-lg text-primary">{city} <span className="text-xs text-primary/30 font-body">({grouped[city]?.length})</span></h3>
+              <div className="flex gap-2">
+                <button onClick={() => startNew(city)} className="text-[10px] text-gold/60 hover:text-gold font-body tracking-wider uppercase">+ Add area</button>
+                <button onClick={() => deleteCity(city)} className="text-[10px] text-red-400/60 hover:text-red-400 font-body tracking-wider uppercase">Delete city</button>
+              </div>
             </div>
             {grouped[city]?.map((loc) => (
               <div key={loc.id} className={`gold-border-card rounded-lg bg-card px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 ${!loc.is_active ? "opacity-50" : ""}`}>
-                <span className="text-xs sm:text-sm text-primary/70 font-elegant truncate">{loc.area_name}</span>
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  {loc.image_url && (
+                    <img src={loc.image_url} alt="" className="w-8 h-8 rounded object-cover flex-shrink-0 border border-primary/20" />
+                  )}
+                  <span className="text-xs sm:text-sm text-primary/70 font-elegant truncate">{loc.area_name}</span>
+                </div>
                 <div className="flex gap-1 flex-shrink-0">
                   <Button size="icon" variant="ghost" onClick={() => toggleActive(loc)} className="w-6 h-6 text-primary/40 hover:text-primary">
                     {loc.is_active ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}

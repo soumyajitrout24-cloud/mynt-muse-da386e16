@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,7 +65,8 @@ const Gallery = () => {
       const { data } = await supabase.from("gallery_images").select("image_url").order("display_order");
       return data?.length ? data.map((d) => d.image_url) : null;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const images = dbImages || fallbackImages;

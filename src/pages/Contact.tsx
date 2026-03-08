@@ -24,7 +24,8 @@ const Contact = () => {
       const { data } = await supabase.from("contact_details").select("*").limit(1).single();
       return data;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: locationCities } = useQuery({
@@ -35,7 +36,8 @@ const Contact = () => {
       const unique = [...new Set(data.map((l) => l.city))];
       return unique.length ? unique : fallbackLocations;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const CONTACT_EMAIL = contact?.email || "myntgirlfriend@gmail.com";

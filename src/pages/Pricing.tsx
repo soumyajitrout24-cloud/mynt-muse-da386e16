@@ -18,7 +18,8 @@ const Pricing = () => {
       const { data } = await supabase.from("pricing_plans").select("*").order("display_order");
       return data?.length ? data : fallbackPlans;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const { data: addOns } = useQuery({
@@ -27,7 +28,8 @@ const Pricing = () => {
       const { data } = await supabase.from("add_ons").select("title").order("display_order");
       return data?.length ? data.map((a) => a.title) : fallbackAddOns;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const items = plans || fallbackPlans;
@@ -38,7 +40,7 @@ const Pricing = () => {
       <a
         href="https://wa.me/YOUR_NUMBER?text=Hi!%20I%20want%20to%20inquire%20about%20Price%20%26%20Donations"
         target="_blank"
-        className="absolute top-4 right-4 md:top-6 md:right-6 bg-gold text-emerald-dark font-display font-semibold px-3 py-2 md:px-4 md:py-3 rounded-full text-xs md:text-sm shadow-gold flex items-center gap-1.5 md:gap-2 hover:scale-105 transition-all duration-300 z-50"
+        className="absolute top-4 right-4 md:top-6 md:right-6 bg-gold text-emerald-900 font-display font-semibold px-3 py-2 md:px-4 md:py-3 rounded-full text-xs md:text-sm shadow-gold flex items-center gap-1.5 md:gap-2 hover:scale-105 transition-all duration-300 z-50"
       >
         <Phone className="w-4 h-4 md:w-5 md:h-5 text-emerald-dark" />
         <span className="hidden sm:inline">Price & Donations</span>

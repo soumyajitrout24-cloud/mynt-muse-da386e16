@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import FadeInSection from "@/components/FadeInSection";
 
-// Fallback data
 const fallbackServices = [
   { id: "1", title: "Elite Companion Experiences", description: "Whether for special occasions, private events, social evenings, or personal engagements — our companions add grace, elegance, and presence that elevate your experience.", features: ["Special occasions", "Private events", "Social evenings", "Personal engagements"] },
   { id: "2", title: "Event & Social Engagements", description: "From corporate parties and product launches to weddings and client entertainment — our talents bring polish and professionalism to your events.", features: ["Corporate parties", "Product launches", "Weddings", "Client entertainment"] },
@@ -21,7 +20,8 @@ const Services = () => {
       const { data } = await supabase.from("services").select("*").order("display_order");
       return data?.length ? data : fallbackServices;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const items = services || fallbackServices;

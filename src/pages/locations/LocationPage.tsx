@@ -1,9 +1,12 @@
 import { useParams } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { locationData } from "../../lib/locationData";
+import FadeInSection from "@/components/FadeInSection";
 
-/* Model images */
+/* Fallback model images */
 import img111 from "@/assets/111.jpeg";
 import img112 from "@/assets/112.jpeg";
 import img113 from "@/assets/113.png";
@@ -26,26 +29,79 @@ import img129 from "@/assets/129.png";
 import img130 from "@/assets/130.png";
 
 const modelImages = [
-  img111,img112,img113,img114,img115,
-  img116,img117,img118,img119,img120,
-  img121,img122,img123,img124,img125,
-  img126,img127,img128,img129,img130
+  img111, img112, img113, img114, img115,
+  img116, img117, img118, img119, img120,
+  img121, img122, img123, img124, img125,
+  img126, img127, img128, img129, img130,
 ];
 
 const LocationPage = () => {
   const { city } = useParams();
-  const areas = locationData[city?.toLowerCase() || ""];
+  const cityLower = city?.toLowerCase() || "";
+
+  // Fetch locations from DB
+  const { data: dbLocations, isLoading } = useQuery({
+    queryKey: ["locations_by_city", cityLower],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("locations")
+        .select("*")
+        .ilike("city", cityLower)
+        .order("display_order");
+      return data;
+    },
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
+  });
+
+  // Fetch gallery images for model cards
+  const { data: galleryImages } = useQuery({
+    queryKey: ["gallery_images"],
+    queryFn: async () => {
+      const { data } = await supabase.from("gallery_images").select("image_url").order("display_order");
+      return data?.length ? data.map((d) => d.image_url) : null;
+    },
+    staleTime: 30 * 1000,
+  });
+
+  const allModelImages = galleryImages || modelImages;
+
+  // Use DB locations if available, fallback to static data
+  const areas = useMemo(() => {
+    if (dbLocations?.length) {
+      return dbLocations.map((loc) => ({
+        name: loc.area_name,
+        image: loc.image_url || "",
+      }));
+    }
+    return locationData[cityLower] || null;
+  }, [dbLocations, cityLower]);
 
   /* pick 6 random models */
   const randomModels = useMemo(() => {
-    const shuffled = [...modelImages].sort(() => 0.5 - Math.random());
+    const shuffled = [...allModelImages].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 6);
-  }, []);
+  }, [allModelImages]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-emerald-gradient">
+        <div className="flex gap-3">
+          <span className="w-2.5 h-2.5 rounded-full bg-gold animate-bounce shadow-[0_0_20px_hsl(var(--gold)/0.8)]"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-gold animate-bounce delay-150 shadow-[0_0_20px_hsl(var(--gold)/0.8)]"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-gold animate-bounce delay-300 shadow-[0_0_20px_hsl(var(--gold)/0.8)]"></span>
+        </div>
+      </div>
+    );
+  }
 
   if (!areas) {
     return (
       <div className="min-h-screen flex items-center justify-center text-primary bg-emerald-gradient">
-        Location Not Found
+        <div className="text-center">
+          <h2 className="font-display text-2xl text-primary mb-2">Location Not Found</h2>
+          <p className="font-elegant text-sm text-primary/50">This location is not available yet.</p>
+        </div>
       </div>
     );
   }
@@ -53,70 +109,69 @@ const LocationPage = () => {
   return (
     <div className="min-h-screen bg-emerald-gradient pt-24 pb-16 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl text-primary uppercase tracking-wider font-display">
-            {city}
-          </h1>
-          <div className="gold-divider w-20 mx-auto mt-4" />
-        </div>
+        <FadeInSection>
+          <div className="text-center mb-12">
+            <p className="font-elegant text-xs tracking-[0.3em] uppercase text-primary/50 mb-3">Explore</p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl text-primary uppercase tracking-wider font-display">
+              {city}
+            </h1>
+            <div className="gold-divider w-20 mx-auto mt-4" />
+          </div>
+        </FadeInSection>
 
         {/* RANDOM MODEL CARDS */}
-        <div className="mb-14">
-          <h2 className="text-center text-primary text-lg uppercase tracking-wider mb-6">
-            Featured Models
-          </h2>
-
-          <div className="flex justify-center flex-wrap gap-4">
-            {randomModels.map((img, index) => (
-              <div
-                key={index}
-                className="relative w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-primary/30 shadow-luxury"
-              >
-                <img
-                  src={img}
-                  alt="Model"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-
-                {/* Watermark */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <span className="text-white/70 text-xs sm:text-sm font-semibold tracking-wider rotate-[-20deg]">
-                    MyntGirlfriend
-                  </span>
+        <FadeInSection delay={0.1}>
+          <div className="mb-14">
+            <h2 className="text-center text-primary text-lg uppercase tracking-wider mb-6 font-display">
+              Featured Models
+            </h2>
+            <div className="flex justify-center flex-wrap gap-4">
+              {randomModels.map((img, index) => (
+                <div
+                  key={index}
+                  className="relative w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-primary/30 shadow-luxury"
+                >
+                  <img src={img} alt="Model" className="w-full h-full object-cover" loading="lazy" />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="text-white/70 text-xs sm:text-sm font-semibold tracking-wider rotate-[-20deg]">
+                      MyntGirlfriend
+                    </span>
+                  </div>
                 </div>
-
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </FadeInSection>
 
         {/* AREAS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {areas.map((area, index) => (
-            <div
-              key={index}
-              className="relative rounded-2xl overflow-hidden border border-primary/30 shadow-luxury group cursor-pointer"
-            >
-              <img
-                src={area.image}
-                alt={area.name}
-                className="w-full h-52 sm:h-64 object-cover transition duration-700 group-hover:scale-110"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition" />
-              <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                <p className="text-white text-sm sm:text-base md:text-lg uppercase tracking-wider">
-                  {area.name}
-                </p>
+            <FadeInSection key={index} delay={0.2 + index * 0.05}>
+              <div className="relative rounded-2xl overflow-hidden border border-primary/30 shadow-luxury group cursor-pointer">
+                {area.image ? (
+                  <img
+                    src={area.image}
+                    alt={area.name}
+                    className="w-full h-52 sm:h-64 object-cover transition duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-52 sm:h-64 bg-emerald-dark/30 flex items-center justify-center">
+                    <MapPin className="w-8 h-8 text-primary/20" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition" />
+                <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <p className="text-white text-sm sm:text-base md:text-lg uppercase tracking-wider">
+                    {area.name}
+                  </p>
+                </div>
               </div>
-            </div>
+            </FadeInSection>
           ))}
         </div>
-
       </div>
     </div>
   );
