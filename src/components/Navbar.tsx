@@ -44,49 +44,31 @@ const isActivePath = (pathname: string, path: string) => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
   const location = useLocation();
 
-  const closeMenu = useCallback(() => {
-    setIsClosing(true);
-    setIsOpen(false);
-  }, []);
-
-  const openMenu = useCallback(() => {
-    setIsClosing(false);
-    setIsOpen(true);
-  }, []);
+  const openMenu = useCallback(() => setIsOpen(true), []);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
-    closeMenu();
-  }, [location.pathname, closeMenu]);
-
-  const showHamburger = !isOpen && !isClosing;
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
-      {/* Hamburger button — works on both mobile and desktop */}
-      <AnimatePresence>
-        {showHamburger && (
-          <motion.button
-            key="hamburger"
-            initial={{ opacity: 0, scale: 0.75 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.75 }}
-            transition={{ duration: 0.2 }}
-            onClick={openMenu}
-            className="fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
-            aria-label="Open menu"
-          >
-            <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
-            <span className="block h-[2px] w-4 rounded-full bg-primary/70 transition-all duration-300" />
-            <span className="block h-[2px] w-3 rounded-full bg-primary/50 transition-all duration-300" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Sticky hamburger on all viewports */}
+      <button
+        onClick={openMenu}
+        className={`fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300 ${
+          isOpen ? "pointer-events-none opacity-0 scale-75" : "pointer-events-auto opacity-100 scale-100"
+        }`}
+        aria-label="Open menu"
+      >
+        <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
+        <span className="block h-[2px] w-4 rounded-full bg-primary/70 transition-all duration-300" />
+        <span className="block h-[2px] w-3 rounded-full bg-primary/50 transition-all duration-300" />
+      </button>
 
-      {/* Overlay + slide panel */}
-      <AnimatePresence onExitComplete={() => setIsClosing(false)}>
+      <AnimatePresence>
         {isOpen && (
           <>
             <motion.div
