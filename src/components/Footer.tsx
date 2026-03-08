@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Mail, Phone } from "lucide-react";
 
@@ -15,12 +16,54 @@ const footerLinks = [
 
 const locations = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
+const CONTACT_EMAIL = "myntgirlfriend@gmail.com";
+const CONTACT_PHONE = "+91 9686239724";
+
 const Footer = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleEmailClick = () => {
+    const subject = "Enquiry - Mynt Girlfriend";
+    const body = `Hi Team,
+
+I am interested in your Mynt Girlfriend services and would like to know more.
+
+Please find my details below:
+- Name:
+- Contact Number:
+- Preferred Date:
+- Any special requests:
+
+Thank you for your time.
+Best regards,
+[Your Name]`;
+
+    if (isMobile) {
+      // Mobile: open mailto link
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+    } else {
+      // Desktop: open Gmail web
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_EMAIL}&su=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+      window.open(gmailUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <footer className="bg-card border-t border-primary/20 pt-12 pb-8">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-          
+
           {/* Brand */}
           <div>
             <h3 className="font-display text-xl md:text-2xl tracking-[0.15em] text-primary gold-glow mb-2">
@@ -73,7 +116,6 @@ const Footer = () => {
               Locations
             </h4>
 
-            {/* Clickable Locations */}
             <div className="flex flex-wrap gap-1.5 mb-5">
               {locations.map((loc) => (
                 <Link
@@ -87,22 +129,23 @@ const Footer = () => {
               ))}
             </div>
 
-            {/* Contact Info */}
             <div className="space-y-1.5">
-              <a
-                href="mailto:contact@myntgirlfriend.com"
+              {/* Email */}
+              <button
+                onClick={handleEmailClick}
                 className="flex items-center gap-2 font-elegant text-[10px] md:text-xs text-primary/40 hover:text-primary transition-colors"
               >
                 <Mail className="w-3 h-3" />
-                contact@myntgirlfriend.com
-              </a>
+                {CONTACT_EMAIL}
+              </button>
 
+              {/* Phone */}
               <a
-                href="tel:+919999999999"
+                href={`tel:${CONTACT_PHONE}`}
                 className="flex items-center gap-2 font-elegant text-[10px] md:text-xs text-primary/40 hover:text-primary transition-colors"
               >
                 <Phone className="w-3 h-3" />
-                +91 99999 99999
+                {CONTACT_PHONE}
               </a>
             </div>
           </div>
