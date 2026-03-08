@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
@@ -33,26 +33,23 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
+  const openMenu = useCallback(() => setIsOpen(true), []);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+
   return (
     <>
-      {/* Hamburger Button — hidden when menu is open */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setIsOpen(true)}
-            className="fixed top-5 left-5 z-[100] flex flex-col justify-center items-center w-11 h-11 gap-[5px] group rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
-            aria-label="Open menu"
-          >
-            <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
-            <span className="block h-[2px] w-4 rounded-full bg-primary/70 transition-all duration-300" />
-            <span className="block h-[2px] w-3 rounded-full bg-primary/50 transition-all duration-300" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Hamburger Button — always rendered, visibility toggled via CSS to avoid AnimatePresence timing gaps */}
+      <button
+        onClick={openMenu}
+        className={`fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300 ${
+          isOpen ? "pointer-events-none opacity-0 scale-75" : "pointer-events-auto opacity-100 scale-100"
+        }`}
+        aria-label="Open menu"
+      >
+        <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
+        <span className="block h-[2px] w-4 rounded-full bg-primary/70 transition-all duration-300" />
+        <span className="block h-[2px] w-3 rounded-full bg-primary/50 transition-all duration-300" />
+      </button>
 
       {/* Overlay */}
       <AnimatePresence>
@@ -62,8 +59,8 @@ const Navbar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm"
-            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-[190] bg-black/60 backdrop-blur-sm"
+            onClick={closeMenu}
           />
         )}
       </AnimatePresence>
@@ -76,7 +73,7 @@ const Navbar = () => {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed top-0 left-0 z-[95] h-full w-[300px] max-w-[85vw] flex flex-col px-8 pt-20 pb-8"
+            className="fixed top-0 left-0 z-[195] h-full w-[300px] max-w-[85vw] flex flex-col px-8 pt-20 pb-8"
             style={{
               background: "linear-gradient(180deg, hsl(158 65% 11%) 0%, hsl(156 62% 15%) 50%, hsl(158 65% 11%) 100%)",
               borderRadius: "0 48px 48px 0",
@@ -93,7 +90,7 @@ const Navbar = () => {
               }}
             />
 
-            {/* Top bar: Brand + Close — proper spacing */}
+            {/* Top bar: Brand + Close */}
             <div className="absolute top-6 left-6 right-6 flex items-center justify-between gap-4">
               <motion.p
                 initial={{ opacity: 0 }}
@@ -108,7 +105,7 @@ const Navbar = () => {
                 initial={{ opacity: 0, rotate: -90 }}
                 animate={{ opacity: 1, rotate: 0 }}
                 transition={{ delay: 0.3, duration: 0.4 }}
-                onClick={() => setIsOpen(false)}
+                onClick={closeMenu}
                 className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-full border border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
                 aria-label="Close menu"
               >
@@ -116,7 +113,7 @@ const Navbar = () => {
               </motion.button>
             </div>
 
-            {/* Nav Links — proper top margin to clear header */}
+            {/* Nav Links */}
             <ul className="space-y-0.5 relative mt-6 flex-1 flex flex-col justify-center">
               {navLinks.map((link, i) => (
                 <motion.li
@@ -128,7 +125,7 @@ const Navbar = () => {
                 >
                   <Link
                     to={link.path}
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                     className={`group/link flex items-center gap-3 py-2 font-elegant text-[15px] md:text-[16px] tracking-wider transition-all duration-300 ${
                       location.pathname === link.path
                         ? "text-primary pl-3"
