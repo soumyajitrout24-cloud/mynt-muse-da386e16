@@ -107,10 +107,10 @@ const AdminGallery = () => {
       setUploadCurrent(i + 1);
       setUploadProgress(Math.round(((i) / previewFiles.length) * 100));
 
-      const { error: uploadError } = await supabase.storage.from("gallery").upload(path, file);
+      const { error: uploadError } = await supabase.storage.from(GALLERY_BUCKET).upload(path, file);
       if (uploadError) { toast.error(`Failed: ${file.name}`); continue; }
 
-      const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(path);
+      const { data: urlData } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(path);
       await supabase.from("gallery_images").insert({
         image_url: urlData.publicUrl,
         display_order: images.length + count + 1,
