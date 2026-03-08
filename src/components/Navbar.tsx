@@ -87,11 +87,14 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-              className="fixed left-0 top-0 z-[230] flex h-full w-[320px] max-w-[88vw] flex-col border-r border-primary/25 bg-card px-7 pb-7 pt-20 shadow-luxury"
+              className="fixed left-0 top-0 z-[230] flex h-full w-[320px] max-w-[88vw] flex-col rounded-r-[2rem] border-r border-primary/25 bg-card px-7 pb-7 pt-20 shadow-luxury"
               aria-label="Main navigation"
             >
               <div className="absolute left-5 right-5 top-5 flex items-center justify-between">
-                <p className="font-display text-sm tracking-[0.16em] text-primary gold-glow">Mynt Girlfriend</p>
+                <div className="flex items-center gap-2.5">
+                  <img src="/logoo.png" alt="Mynt Girlfriend" className="h-7 w-7 rounded-full object-cover pointer-events-none" />
+                  <p className="font-display text-sm tracking-[0.16em] text-primary gold-glow">Mynt Girlfriend</p>
+                </div>
                 <button
                   type="button"
                   onClick={closeMenu}
