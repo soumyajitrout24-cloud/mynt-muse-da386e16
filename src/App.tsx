@@ -23,7 +23,7 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const BookingPolicy = lazy(() => import("./pages/BookingPolicy"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const LocationPage = lazy(() => import("./pages/locations/LocationPage"));
-const Proposal = lazy(() => import("./pages/Proposal"));
+
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 
