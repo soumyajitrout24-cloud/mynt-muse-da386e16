@@ -19,6 +19,20 @@ type FeaturedModel = {
 
 const CITIES = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
 
+const FEATURED_BUCKET = "featured-models";
+
+const extractStoragePath = (publicUrl: string, bucket: string) => {
+  try {
+    const url = new URL(publicUrl);
+    const marker = `/object/public/${bucket}/`;
+    const idx = url.pathname.indexOf(marker);
+    if (idx === -1) return null;
+    return decodeURIComponent(url.pathname.slice(idx + marker.length));
+  } catch {
+    return null;
+  }
+};
+
 const AdminFeaturedModels = () => {
   const [models, setModels] = useState<FeaturedModel[]>([]);
   const [loading, setLoading] = useState(true);
