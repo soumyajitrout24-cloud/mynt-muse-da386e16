@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-
 import { toast } from "sonner";
 import {
   Trash2, Upload, X, AlertTriangle, ImageIcon, RefreshCw,
-  ChevronDown, ChevronUp, Users,
+  ChevronDown, ChevronUp, Users, Pencil,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
@@ -19,7 +18,6 @@ type FeaturedModel = {
 };
 
 const CITIES = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
-
 const FEATURED_BUCKET = "featured-models";
 
 const extractStoragePath = (publicUrl: string, bucket: string) => {
@@ -47,9 +45,11 @@ const AdminFeaturedModels = () => {
   const [expandedCities, setExpandedCities] = useState<Record<string, boolean>>({});
   const [previewFiles, setPreviewFiles] = useState<{ file: File; url: string }[]>([]);
   const [dragOverCity, setDragOverCity] = useState<string | null>(null);
-
+  const [replacingModel, setReplacingModel] = useState<FeaturedModel | null>(null);
+  const [replacingId, setReplacingId] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const fetchModels = useCallback(async () => {
     const { data } = await supabase
@@ -77,7 +77,9 @@ const AdminFeaturedModels = () => {
     e.preventDefault();
     setDragOverCity(city);
   };
+
   const handleDragLeave = () => setDragOverCity(null);
+
   const handleDrop = (e: React.DragEvent, city: string) => {
     e.preventDefault();
     setDragOverCity(null);
@@ -160,6 +162,57 @@ const AdminFeaturedModels = () => {
     setUploadProgress(0);
   };
 
+  const startReplace = (model: FeaturedModel) => {
+    setReplacingModel(model);
+    replaceInputRef.current?.click();
+  };
+
+  const handleReplaceFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !replacingModel) return;
+
+    setReplacingId(replacingModel.id);
+    const cityFolder = (replacingModel.city || replacingModel.location_name).toLowerCase();
+    const ext = file.name.split(".").pop();
+    const newPath = `${cityFolder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage.from(FEATURED_BUCKET).upload(newPath, file, { upsert: false });
+    if (uploadError) {
+      toast.error("Failed to upload replacement image");
+      setReplacingId(null);
+      setReplacingModel(null);
+      e.target.value = "";
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from(FEATURED_BUCKET).getPublicUrl(newPath);
+    const oldPath = extractStoragePath(replacingModel.image_url, FEATURED_BUCKET);
+
+    const { error: updateError } = await supabase
+      .from("featured_models")
+      .update({ image_url: urlData.publicUrl })
+      .eq("id", replacingModel.id);
+
+    if (updateError) {
+      toast.error("Failed to replace image");
+      await supabase.storage.from(FEATURED_BUCKET).remove([newPath]);
+      setReplacingId(null);
+      setReplacingModel(null);
+      e.target.value = "";
+      return;
+    }
+
+    if (oldPath) {
+      await supabase.storage.from(FEATURED_BUCKET).remove([oldPath]);
+    }
+
+    toast.success("Model image updated");
+    setReplacingId(null);
+    setReplacingModel(null);
+    e.target.value = "";
+    await fetchModels();
+  };
+
   const handleDelete = async (model: FeaturedModel) => {
     setDeleting(model.id);
     setDeleteConfirm(null);
@@ -173,14 +226,12 @@ const AdminFeaturedModels = () => {
     fetchModels();
   };
 
-
-
   const grouped = CITIES.reduce((acc, city) => {
     acc[city] = models.filter((m) => m.location_name.toLowerCase() === city.toLowerCase());
     return acc;
   }, {} as Record<string, FeaturedModel[]>);
 
-  if (loading)
+  if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="flex gap-2">
@@ -190,6 +241,7 @@ const AdminFeaturedModels = () => {
         </div>
       </div>
     );
+  }
 
   return (
     <div className="space-y-5">
@@ -201,8 +253,14 @@ const AdminFeaturedModels = () => {
         className="hidden"
         onChange={handleFileSelect}
       />
+      <input
+        ref={replaceInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={handleReplaceFile}
+      />
 
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h2 className="font-display text-lg sm:text-xl text-primary tracking-wider">Featured Models</h2>
@@ -216,10 +274,9 @@ const AdminFeaturedModels = () => {
       </div>
 
       <div className="bg-gold/5 border border-gold/20 rounded-lg px-3 py-2 text-[10px] sm:text-xs text-primary/50 font-body">
-        💡 Upload model images for each city. These appear in the "Featured Models" section on each location page. 6 random images are shown per visit.
+        💡 Upload model images city-wise. You can add, replace, and delete images for each location.
       </div>
 
-      {/* Preview staged files */}
       {previewFiles.length > 0 && uploadCity && (
         <div className="gold-border-card rounded-xl bg-card p-4 space-y-3">
           <div className="flex items-center justify-between">
@@ -263,11 +320,11 @@ const AdminFeaturedModels = () => {
           <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
             {previewFiles.map((pf, i) => (
               <div key={i} className="relative rounded-lg overflow-hidden border border-gold/30 aspect-[3/4]">
-                <img src={pf.url} alt="" className="w-full h-full object-cover" />
+                <img src={pf.url} alt="preview" className="w-full h-full object-cover" />
                 {!uploading && (
                   <button
                     onClick={() => removePreview(i)}
-                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500/80 flex items-center justify-center text-white"
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-card/80 border border-primary/40 flex items-center justify-center text-primary"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -278,14 +335,12 @@ const AdminFeaturedModels = () => {
         </div>
       )}
 
-      {/* Cities */}
       {CITIES.map((city) => {
         const cityModels = grouped[city] || [];
         const isExpanded = expandedCities[city] !== false;
 
         return (
           <div key={city} className="gold-border-card rounded-xl bg-card overflow-hidden">
-            {/* City header */}
             <div
               className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-primary/5 transition-colors"
               onClick={() => toggleCity(city)}
@@ -310,7 +365,6 @@ const AdminFeaturedModels = () => {
 
             {isExpanded && (
               <div className="border-t border-primary/10">
-                {/* Drop zone */}
                 <div
                   onDragOver={(e) => handleDragOver(e, city)}
                   onDragLeave={handleDragLeave}
@@ -331,7 +385,7 @@ const AdminFeaturedModels = () => {
                 {cityModels.length === 0 ? (
                   <div className="px-4 py-6 text-center space-y-2">
                     <ImageIcon className="w-6 h-6 text-primary/15 mx-auto mb-1" />
-                    <p className="text-[11px] text-primary/30 font-body">No model images yet for {city}. Use the upload area above to add featured model images.</p>
+                    <p className="text-[11px] text-primary/30 font-body">No model images yet for {city}. Use the upload area above to add images.</p>
                   </div>
                 ) : (
                   <div className="p-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
@@ -339,21 +393,31 @@ const AdminFeaturedModels = () => {
                       <div
                         key={model.id}
                         className={`relative group rounded-lg overflow-hidden border border-primary/15 aspect-[3/4] ${
-                          deleting === model.id ? "opacity-30 animate-pulse" : ""
+                          deleting === model.id || replacingId === model.id ? "opacity-40 animate-pulse" : ""
                         }`}
                       >
                         <img
                           src={model.image_url}
-                          alt="Model"
+                          alt={`${model.location_name} model`}
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />
-                        <button
-                          onClick={() => setDeleteConfirm(model)}
-                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500/70 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
+                        <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => startReplace(model)}
+                            className="w-6 h-6 rounded-full bg-card/80 border border-primary/40 flex items-center justify-center text-primary"
+                            title="Replace image"
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirm(model)}
+                            className="w-6 h-6 rounded-full bg-card/80 border border-primary/40 flex items-center justify-center text-primary"
+                            title="Delete image"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -364,27 +428,26 @@ const AdminFeaturedModels = () => {
         );
       })}
 
-      {/* Delete confirmation */}
       {deleteConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setDeleteConfirm(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/70 backdrop-blur-sm p-4" onClick={() => setDeleteConfirm(null)}>
           <div className="bg-card border border-primary/20 rounded-2xl p-5 sm:p-6 max-w-sm w-full space-y-4 shadow-luxury" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
-                <AlertTriangle className="w-5 h-5 text-red-400" />
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-display text-base text-primary">Delete Model Image?</h3>
-                <p className="text-xs text-primary/50 font-body mt-1">This will remove this image from the {deleteConfirm.location_name} featured models section.</p>
+                <p className="text-xs text-primary/50 font-body mt-1">This will remove this image from {deleteConfirm.location_name} featured models.</p>
               </div>
             </div>
             <div className="flex justify-center">
-              <img src={deleteConfirm.image_url} alt="" className="w-20 h-28 object-cover rounded-lg border border-primary/20" />
+              <img src={deleteConfirm.image_url} alt="model preview" className="w-20 h-28 object-cover rounded-lg border border-primary/20" />
             </div>
             <div className="flex gap-2">
               <Button onClick={() => setDeleteConfirm(null)} variant="outline" size="sm" className="flex-1 border-primary/20 text-primary/60 text-xs">
                 Cancel
               </Button>
-              <Button onClick={() => handleDelete(deleteConfirm)} size="sm" className="flex-1 bg-red-500 hover:bg-red-600 text-white text-xs">
+              <Button onClick={() => handleDelete(deleteConfirm)} size="sm" className="flex-1 bg-primary text-background hover:bg-primary/90 text-xs">
                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
               </Button>
             </div>

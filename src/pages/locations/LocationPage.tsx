@@ -6,9 +6,40 @@ import { supabase } from "@/integrations/supabase/client";
 import { locationData } from "../../lib/locationData";
 import FadeInSection from "@/components/FadeInSection";
 
+import img111 from "@/assets/111.jpeg";
+import img112 from "@/assets/112.jpeg";
+import img113 from "@/assets/113.png";
+import img114 from "@/assets/114.png";
+import img115 from "@/assets/115.png";
+import img116 from "@/assets/116.png";
+import img117 from "@/assets/117.png";
+import img118 from "@/assets/118.png";
+import img119 from "@/assets/119.png";
+import img120 from "@/assets/120.png";
+import img121 from "@/assets/121.png";
+import img122 from "@/assets/122.png";
+import img123 from "@/assets/123.png";
+import img124 from "@/assets/124.png";
+import img125 from "@/assets/125.png";
+import img126 from "@/assets/126.png";
+import img127 from "@/assets/127.png";
+import img128 from "@/assets/128.png";
+import img129 from "@/assets/129.png";
+import img130 from "@/assets/130.png";
+
 const CITY_ALIASES: Record<string, string> = {
   banglore: "bangalore",
 };
+
+const FEATURED_FALLBACK_BY_CITY: Record<string, string[]> = {
+  bangalore: [img111, img112, img113, img114, img115, img116],
+  chennai: [img117, img118, img119, img120, img121, img122],
+  hyderabad: [img123, img124, img125, img126, img127, img128],
+  mumbai: [img129, img130, img111, img114, img117, img120],
+  nashik: [img112, img115, img118, img121, img124, img127],
+};
+
+const randomize = (items: string[]) => [...items].sort(() => 0.5 - Math.random());
 
 const LocationPage = () => {
   const { city } = useParams();
@@ -16,7 +47,6 @@ const LocationPage = () => {
   const normalizedCity = CITY_ALIASES[cityLower] || cityLower;
   const displayCity = normalizedCity ? normalizedCity.charAt(0).toUpperCase() + normalizedCity.slice(1) : "";
 
-  // Fetch locations from DB
   const { data: dbLocations, isLoading } = useQuery({
     queryKey: ["locations_by_city", normalizedCity],
     queryFn: async () => {
@@ -32,14 +62,13 @@ const LocationPage = () => {
     refetchOnWindowFocus: true,
   });
 
-  // Fetch featured model images for this city (DB only)
   const { data: featuredModelImages } = useQuery({
     queryKey: ["featured_models", normalizedCity],
     queryFn: async () => {
       const { data } = await supabase
         .from("featured_models")
-        .select("image_url")
-        .ilike("location_name", normalizedCity)
+        .select("image_url, city, location_name")
+        .or(`city.ilike.${normalizedCity},location_name.ilike.${normalizedCity}`)
         .eq("is_active", true)
         .order("display_order");
       return data?.map((d) => d.image_url) || [];
@@ -48,7 +77,6 @@ const LocationPage = () => {
     refetchOnWindowFocus: true,
   });
 
-  // Use DB locations if available, fallback to static area data only
   const areas = useMemo(() => {
     if (dbLocations?.length) {
       return dbLocations.map((loc) => ({
@@ -59,11 +87,11 @@ const LocationPage = () => {
     return locationData[normalizedCity] || null;
   }, [dbLocations, normalizedCity]);
 
-  /* pick 6 random featured models from DB */
   const randomModels = useMemo(() => {
-    const shuffled = [...featuredModelImages].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 6);
-  }, [featuredModelImages]);
+    const fallback = FEATURED_FALLBACK_BY_CITY[normalizedCity] || [];
+    const unique = Array.from(new Set([...(featuredModelImages || []), ...fallback]));
+    return randomize(unique).slice(0, 6);
+  }, [featuredModelImages, normalizedCity]);
 
   if (isLoading) {
     return (
@@ -91,7 +119,6 @@ const LocationPage = () => {
   return (
     <div className="min-h-screen bg-emerald-gradient pt-24 pb-16 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <FadeInSection>
           <div className="text-center mb-12">
             <p className="font-elegant text-xs tracking-[0.3em] uppercase text-primary/50 mb-3">Explore</p>
@@ -102,7 +129,6 @@ const LocationPage = () => {
           </div>
         </FadeInSection>
 
-        {/* RANDOM MODEL CARDS — only shown if featured models exist in DB */}
         {randomModels.length > 0 && (
           <FadeInSection delay={0.1}>
             <div className="mb-14">
@@ -112,10 +138,10 @@ const LocationPage = () => {
               <div className="flex justify-center flex-wrap gap-4">
                 {randomModels.map((img, index) => (
                   <div
-                    key={index}
+                    key={`${displayCity}-${index}`}
                     className="relative w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-primary/30 shadow-luxury"
                   >
-                    <img src={img} alt="Model" className="w-full h-full object-cover" loading="lazy" />
+                    <img src={img} alt={`${displayCity} featured model ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                       <span className="text-white/70 text-xs sm:text-sm font-semibold tracking-wider rotate-[-20deg]">
                         MyntGirlfriend
@@ -128,7 +154,6 @@ const LocationPage = () => {
           </FadeInSection>
         )}
 
-        {/* AREAS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {areas.map((area, index) => (
             <FadeInSection key={index} delay={0.2 + index * 0.05}>
