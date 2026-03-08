@@ -68,6 +68,8 @@ const AdminGallery = () => {
   const [clearConfirm, setClearConfirm] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [previewFiles, setPreviewFiles] = useState<{ file: File; url: string }[]>([]);
+  const [seeding, setSeeding] = useState(false);
+  const [seedProgress, setSeedProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchImages = useCallback(async () => {
