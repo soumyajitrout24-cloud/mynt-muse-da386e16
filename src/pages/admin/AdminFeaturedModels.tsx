@@ -47,8 +47,8 @@ const AdminFeaturedModels = () => {
   const [expandedCities, setExpandedCities] = useState<Record<string, boolean>>({});
   const [previewFiles, setPreviewFiles] = useState<{ file: File; url: string }[]>([]);
   const [dragOverCity, setDragOverCity] = useState<string | null>(null);
-  const [seedingCity, setSeedingCity] = useState<string | null>(null);
-  const [seedProgress, setSeedProgress] = useState(0);
+
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchModels = useCallback(async () => {
