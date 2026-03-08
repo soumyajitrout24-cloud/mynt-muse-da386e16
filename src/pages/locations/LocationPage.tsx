@@ -126,29 +126,31 @@ const LocationPage = () => {
           </div>
         </FadeInSection>
 
-        {/* RANDOM MODEL CARDS */}
-        <FadeInSection delay={0.1}>
-          <div className="mb-14">
-            <h2 className="text-center text-primary text-lg uppercase tracking-wider mb-6 font-display">
-              Featured Models
-            </h2>
-            <div className="flex justify-center flex-wrap gap-4">
-              {randomModels.map((img, index) => (
-                <div
-                  key={index}
-                  className="relative w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-primary/30 shadow-luxury"
-                >
-                  <img src={img} alt="Model" className="w-full h-full object-cover" loading="lazy" />
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="text-white/70 text-xs sm:text-sm font-semibold tracking-wider rotate-[-20deg]">
-                      MyntGirlfriend
-                    </span>
+        {/* RANDOM MODEL CARDS — only shown if featured models exist in DB */}
+        {randomModels.length > 0 && (
+          <FadeInSection delay={0.1}>
+            <div className="mb-14">
+              <h2 className="text-center text-primary text-lg uppercase tracking-wider mb-6 font-display">
+                Featured Models
+              </h2>
+              <div className="flex justify-center flex-wrap gap-4">
+                {randomModels.map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-primary/30 shadow-luxury"
+                  >
+                    <img src={img} alt="Model" className="w-full h-full object-cover" loading="lazy" />
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <span className="text-white/70 text-xs sm:text-sm font-semibold tracking-wider rotate-[-20deg]">
+                        MyntGirlfriend
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </FadeInSection>
+          </FadeInSection>
+        )}
 
         {/* AREAS GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

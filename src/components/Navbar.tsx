@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
@@ -33,23 +33,35 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
+  // Close menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
   const openMenu = useCallback(() => setIsOpen(true), []);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   return (
     <>
-      {/* Hamburger Button — always rendered, visibility toggled via CSS to avoid AnimatePresence timing gaps */}
-      <button
-        onClick={openMenu}
-        className={`fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300 ${
-          isOpen ? "pointer-events-none opacity-0 scale-75" : "pointer-events-auto opacity-100 scale-100"
-        }`}
-        aria-label="Open menu"
-      >
-        <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
-        <span className="block h-[2px] w-4 rounded-full bg-primary/70 transition-all duration-300" />
-        <span className="block h-[2px] w-3 rounded-full bg-primary/50 transition-all duration-300" />
-      </button>
+      {/* Hamburger Button — hidden when menu is open */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.button
+            key="hamburger"
+            initial={{ opacity: 0, scale: 0.75 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.75 }}
+            transition={{ duration: 0.2 }}
+            onClick={openMenu}
+            className="fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
+            aria-label="Open menu"
+          >
+            <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
+            <span className="block h-[2px] w-4 rounded-full bg-primary/70 transition-all duration-300" />
+            <span className="block h-[2px] w-3 rounded-full bg-primary/50 transition-all duration-300" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Overlay */}
       <AnimatePresence>
