@@ -70,7 +70,7 @@ const LocationPage = () => {
     refetchOnWindowFocus: true,
   });
 
-  const allModelImages = featuredModelImages || modelImages;
+  const allModelImages = featuredModelImages || [];
 
   // Use DB locations if available, fallback to static data
   const areas = useMemo(() => {
