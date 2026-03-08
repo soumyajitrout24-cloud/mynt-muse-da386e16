@@ -11,12 +11,27 @@ import {
 type FeaturedModel = {
   id: string;
   city: string;
+  location_name: string;
   image_url: string;
   display_order: number;
   is_active: boolean;
 };
 
 const CITIES = ["Bangalore", "Chennai", "Hyderabad", "Mumbai", "Nashik"];
+
+const FEATURED_BUCKET = "featured-models";
+
+const extractStoragePath = (publicUrl: string, bucket: string) => {
+  try {
+    const url = new URL(publicUrl);
+    const marker = `/object/public/${bucket}/`;
+    const idx = url.pathname.indexOf(marker);
+    if (idx === -1) return null;
+    return decodeURIComponent(url.pathname.slice(idx + marker.length));
+  } catch {
+    return null;
+  }
+};
 
 const AdminFeaturedModels = () => {
   const [models, setModels] = useState<FeaturedModel[]>([]);
@@ -37,7 +52,7 @@ const AdminFeaturedModels = () => {
     const { data } = await supabase
       .from("featured_models")
       .select("*")
-      .order("city")
+      .order("location_name")
       .order("display_order");
     setModels(data || []);
     setLoading(false);
@@ -108,23 +123,24 @@ const AdminFeaturedModels = () => {
     setUploadCurrent(0);
     setUploadProgress(0);
 
-    const cityModels = models.filter((m) => m.city.toLowerCase() === uploadCity.toLowerCase());
+    const cityModels = models.filter((m) => m.location_name.toLowerCase() === uploadCity.toLowerCase());
     let count = 0;
 
     for (let i = 0; i < previewFiles.length; i++) {
       const { file } = previewFiles[i];
       const ext = file.name.split(".").pop();
-      const path = `featured/${uploadCity.toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const path = `${uploadCity.toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
       setUploadCurrent(i + 1);
       setUploadProgress(Math.round((i / previewFiles.length) * 100));
 
-      const { error } = await supabase.storage.from("gallery").upload(path, file);
+      const { error } = await supabase.storage.from(FEATURED_BUCKET).upload(path, file);
       if (error) { toast.error(`Failed: ${file.name}`); continue; }
 
-      const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(path);
+      const { data: urlData } = supabase.storage.from(FEATURED_BUCKET).getPublicUrl(path);
       await supabase.from("featured_models").insert({
         city: uploadCity,
+        location_name: uploadCity,
         image_url: urlData.publicUrl,
         display_order: cityModels.length + count + 1,
       });
@@ -144,9 +160,9 @@ const AdminFeaturedModels = () => {
   const handleDelete = async (model: FeaturedModel) => {
     setDeleting(model.id);
     setDeleteConfirm(null);
-    const urlParts = model.image_url.split("/gallery/");
-    if (urlParts[1]) {
-      await supabase.storage.from("gallery").remove([decodeURIComponent(urlParts[1])]);
+    const storagePath = extractStoragePath(model.image_url, FEATURED_BUCKET);
+    if (storagePath) {
+      await supabase.storage.from(FEATURED_BUCKET).remove([storagePath]);
     }
     await supabase.from("featured_models").delete().eq("id", model.id);
     toast.success("Model image deleted");
@@ -155,7 +171,7 @@ const AdminFeaturedModels = () => {
   };
 
   const grouped = CITIES.reduce((acc, city) => {
-    acc[city] = models.filter((m) => m.city.toLowerCase() === city.toLowerCase());
+    acc[city] = models.filter((m) => m.location_name.toLowerCase() === city.toLowerCase());
     return acc;
   }, {} as Record<string, FeaturedModel[]>);
 
@@ -353,7 +369,7 @@ const AdminFeaturedModels = () => {
               </div>
               <div>
                 <h3 className="font-display text-base text-primary">Delete Model Image?</h3>
-                <p className="text-xs text-primary/50 font-body mt-1">This will remove this image from the {deleteConfirm.city} featured models section.</p>
+                <p className="text-xs text-primary/50 font-body mt-1">This will remove this image from the {deleteConfirm.location_name} featured models section.</p>
               </div>
             </div>
             <div className="flex justify-center">

@@ -15,6 +15,20 @@ type GalleryImage = {
   is_active: boolean;
 };
 
+const GALLERY_BUCKET = "gallery-images";
+
+const extractStoragePath = (publicUrl: string, bucket: string) => {
+  try {
+    const url = new URL(publicUrl);
+    const marker = `/object/public/${bucket}/`;
+    const idx = url.pathname.indexOf(marker);
+    if (idx === -1) return null;
+    return decodeURIComponent(url.pathname.slice(idx + marker.length));
+  } catch {
+    return null;
+  }
+};
+
 const AdminGallery = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -93,10 +107,10 @@ const AdminGallery = () => {
       setUploadCurrent(i + 1);
       setUploadProgress(Math.round(((i) / previewFiles.length) * 100));
 
-      const { error: uploadError } = await supabase.storage.from("gallery").upload(path, file);
+      const { error: uploadError } = await supabase.storage.from(GALLERY_BUCKET).upload(path, file);
       if (uploadError) { toast.error(`Failed: ${file.name}`); continue; }
 
-      const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(path);
+      const { data: urlData } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(path);
       await supabase.from("gallery_images").insert({
         image_url: urlData.publicUrl,
         display_order: images.length + count + 1,
@@ -116,9 +130,9 @@ const AdminGallery = () => {
   const handleDelete = async (img: GalleryImage) => {
     setDeleting(img.id);
     setDeleteConfirm(null);
-    const urlParts = img.image_url.split("/gallery/");
-    if (urlParts[1]) {
-      await supabase.storage.from("gallery").remove([decodeURIComponent(urlParts[1])]);
+    const storagePath = extractStoragePath(img.image_url, GALLERY_BUCKET);
+    if (storagePath) {
+      await supabase.storage.from(GALLERY_BUCKET).remove([storagePath]);
     }
     await supabase.from("gallery_images").delete().eq("id", img.id);
     toast.success("Image deleted");
@@ -147,15 +161,10 @@ const AdminGallery = () => {
   const deleteAll = async () => {
     setClearConfirm(false);
     const paths = images
-      .map((img) => {
-        const parts = img.image_url.split("/gallery/");
-        return parts[1] ? decodeURIComponent(parts[1]) : null;
-      })
+      .map((img) => extractStoragePath(img.image_url, GALLERY_BUCKET))
       .filter(Boolean) as string[];
-    if (paths.length) await supabase.storage.from("gallery").remove(paths);
-    for (const img of images) {
-      await supabase.from("gallery_images").delete().eq("id", img.id);
-    }
+    if (paths.length) await supabase.storage.from(GALLERY_BUCKET).remove(paths);
+    await supabase.from("gallery_images").delete().in("id", images.map((img) => img.id));
     toast.success("All images deleted");
     fetchImages();
   };

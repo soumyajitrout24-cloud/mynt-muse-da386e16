@@ -89,15 +89,16 @@ const AdminLocations = () => {
 
   const handleSave = async () => {
     if (!editing) return;
-    const finalCity = editing.city || newCity;
-    if (!finalCity.trim() || !editing.area_name.trim()) {
+    const finalCity = (editing.city || newCity).trim();
+    const areaName = editing.area_name.trim();
+
+    if (!finalCity || !areaName) {
       toast.error("City and area name are required");
       return;
     }
 
     let imageUrl = editing.image_url;
 
-    // Upload preview file if exists
     if (previewFile) {
       const url = await uploadImage(previewFile.file);
       if (url) imageUrl = url;
@@ -105,24 +106,44 @@ const AdminLocations = () => {
       setPreviewFile(null);
     }
 
-    const saveData = { ...editing, city: finalCity.trim(), image_url: imageUrl || null };
-    const { id, ...data } = saveData;
-    if (id) {
-      await supabase.from("locations").update(data).eq("id", id);
-      toast.success("Location updated");
+    if (editing.id) {
+      const { error } = await supabase
+        .from("locations")
+        .update({ city: finalCity, area_name: areaName, image_url: imageUrl || null, is_active: editing.is_active })
+        .eq("id", editing.id);
+      if (error) {
+        toast.error("Failed to update area");
+        return;
+      }
+      toast.success("Area updated");
     } else {
-      await supabase.from("locations").insert(data);
-      toast.success("Location added");
+      const cityAreas = locations.filter((loc) => loc.city.toLowerCase() === finalCity.toLowerCase());
+      const nextOrder = (cityAreas.reduce((max, loc) => Math.max(max, loc.display_order), 0) || 0) + 1;
+
+      const { error } = await supabase.from("locations").insert({
+        city: finalCity,
+        area_name: areaName,
+        image_url: imageUrl || null,
+        is_active: true,
+        display_order: nextOrder,
+      });
+      if (error) {
+        toast.error("Failed to add area");
+        return;
+      }
+      toast.success("Area added");
     }
+
     setEditing(null);
-    fetchLocations();
+    await fetchLocations();
   };
 
   const handleDeleteArea = async (id: string) => {
     setDeleteConfirm(null);
-    await supabase.from("locations").delete().eq("id", id);
+    const { error } = await supabase.from("locations").delete().eq("id", id);
+    if (error) return toast.error("Failed to delete area");
     toast.success("Area deleted");
-    fetchLocations();
+    await fetchLocations();
   };
 
   const handleDeleteCity = async (city: string) => {
