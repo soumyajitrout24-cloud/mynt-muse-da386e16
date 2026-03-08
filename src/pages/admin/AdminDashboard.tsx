@@ -89,6 +89,7 @@ const AdminDashboard = () => {
       {/* Content */}
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {activeTab === "gallery" && <AdminGallery />}
+        {activeTab === "featured" && <AdminFeaturedModels />}
         {activeTab === "services" && <AdminServices />}
         {activeTab === "pricing" && <AdminPricing />}
         {activeTab === "locations" && <AdminLocations />}
