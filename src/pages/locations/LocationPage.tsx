@@ -54,17 +54,23 @@ const LocationPage = () => {
     refetchOnWindowFocus: true,
   });
 
-  // Fetch gallery images for model cards
-  const { data: galleryImages } = useQuery({
-    queryKey: ["gallery_images"],
+  // Fetch featured model images for this city
+  const { data: featuredModelImages } = useQuery({
+    queryKey: ["featured_models", cityLower],
     queryFn: async () => {
-      const { data } = await supabase.from("gallery_images").select("image_url").order("display_order");
+      const { data } = await supabase
+        .from("featured_models")
+        .select("image_url")
+        .ilike("city", cityLower)
+        .eq("is_active", true)
+        .order("display_order");
       return data?.length ? data.map((d) => d.image_url) : null;
     },
     staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
   });
 
-  const allModelImages = galleryImages || modelImages;
+  const allModelImages = featuredModelImages || modelImages;
 
   // Use DB locations if available, fallback to static data
   const areas = useMemo(() => {
