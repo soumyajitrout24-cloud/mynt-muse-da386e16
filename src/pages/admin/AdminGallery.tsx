@@ -335,10 +335,33 @@ const AdminGallery = () => {
 
       {/* Existing images grid */}
       {images.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-primary/20 rounded-xl">
-          <ImageIcon className="w-10 h-10 text-primary/20 mx-auto mb-3" />
-          <p className="text-primary/40 font-elegant text-sm">No images yet. Upload some to get started.</p>
-          <p className="text-primary/25 font-body text-[10px] mt-1">The website shows fallback images until you upload here.</p>
+        <div className="space-y-4">
+          <div className="bg-gold/5 border border-gold/20 rounded-xl p-4 sm:p-5 text-center space-y-3">
+            <ImageIcon className="w-10 h-10 text-gold/40 mx-auto" />
+            <div>
+              <p className="text-sm text-primary/60 font-body">
+                The website is currently showing <strong>20 built-in static images</strong> as fallbacks.
+              </p>
+              <p className="text-xs text-primary/40 font-body mt-1">
+                Click "Import Static Images" to add them to the database so you can manage, reorder, and delete them.
+              </p>
+            </div>
+            <Button
+              onClick={seedStaticImages}
+              disabled={seeding}
+              size="sm"
+              className="bg-gold text-emerald-dark hover:bg-gold/90 text-xs"
+            >
+              <Download className="w-3.5 h-3.5 mr-1.5" />
+              {seeding ? `Importing... (${seedProgress}/20)` : "Import Static Images"}
+            </Button>
+            {seeding && (
+              <Progress value={(seedProgress / 20) * 100} className="h-2 bg-primary/10 mt-2" />
+            )}
+          </div>
+          <div className="text-center py-8 border border-dashed border-primary/20 rounded-xl">
+            <p className="text-primary/30 font-body text-xs">Or upload your own images using the upload area above.</p>
+          </div>
         </div>
       ) : (
         <>
