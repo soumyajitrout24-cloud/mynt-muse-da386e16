@@ -130,9 +130,9 @@ const AdminGallery = () => {
   const handleDelete = async (img: GalleryImage) => {
     setDeleting(img.id);
     setDeleteConfirm(null);
-    const urlParts = img.image_url.split("/gallery/");
-    if (urlParts[1]) {
-      await supabase.storage.from("gallery").remove([decodeURIComponent(urlParts[1])]);
+    const storagePath = extractStoragePath(img.image_url, GALLERY_BUCKET);
+    if (storagePath) {
+      await supabase.storage.from(GALLERY_BUCKET).remove([storagePath]);
     }
     await supabase.from("gallery_images").delete().eq("id", img.id);
     toast.success("Image deleted");
