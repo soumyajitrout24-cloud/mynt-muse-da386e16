@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Trash2, Upload, Eye, EyeOff, ArrowUp, ArrowDown, ImageIcon } from "lucide-react";
+import { Trash2, Upload, Eye, EyeOff, ArrowUp, ArrowDown, ImageIcon, RefreshCw } from "lucide-react";
 
 type GalleryImage = {
   id: string;
@@ -53,7 +53,6 @@ const AdminGallery = () => {
     toast.success(`${count} image${count > 1 ? "s" : ""} uploaded!`);
     await fetchImages();
     setUploading(false);
-    // Reset input
     e.target.value = "";
   };
 
@@ -112,9 +111,12 @@ const AdminGallery = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h2 className="font-display text-lg sm:text-xl text-primary tracking-wider">Gallery</h2>
-          <p className="text-xs text-primary/40 font-body">{images.length} images</p>
+          <p className="text-xs text-primary/40 font-body">{images.length} images · {images.filter(i => i.is_active).length} visible on website</p>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
+          <Button onClick={fetchImages} variant="outline" size="sm" className="border-primary/20 text-primary/60 text-xs">
+            <RefreshCw className="w-3.5 h-3.5 mr-1" /> Refresh
+          </Button>
           <label className="cursor-pointer flex-1 sm:flex-none">
             <Button disabled={uploading} className="bg-gold text-emerald-dark hover:bg-gold/90 w-full sm:w-auto text-xs sm:text-sm">
               <Upload className="w-4 h-4 mr-1.5" />
@@ -130,10 +132,16 @@ const AdminGallery = () => {
         </div>
       </div>
 
+      {/* Info banner */}
+      <div className="bg-gold/5 border border-gold/20 rounded-lg px-3 py-2 text-[10px] sm:text-xs text-primary/50 font-body">
+        💡 Changes appear on the website within 30 seconds. Upload, reorder, hide or delete images here.
+      </div>
+
       {images.length === 0 ? (
         <div className="text-center py-16 border border-dashed border-primary/20 rounded-xl">
           <ImageIcon className="w-10 h-10 text-primary/20 mx-auto mb-3" />
           <p className="text-primary/40 font-elegant text-sm">No images yet. Upload some to get started.</p>
+          <p className="text-primary/25 font-body text-[10px] mt-1">The website will show fallback images until you upload here.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
@@ -169,6 +177,11 @@ const AdminGallery = () => {
                   Hidden
                 </div>
               )}
+
+              {/* Order number */}
+              <div className="absolute top-2 right-2 bg-black/50 text-white text-[9px] px-1.5 py-0.5 rounded font-body">
+                #{idx + 1}
+              </div>
             </div>
           ))}
         </div>
