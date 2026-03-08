@@ -173,38 +173,7 @@ const AdminFeaturedModels = () => {
     fetchModels();
   };
 
-  const seedCityImages = async (city: string) => {
-    const staticImages = STATIC_CITY_IMAGES[city] || [];
-    if (!staticImages.length) { toast.error(`No static images available for ${city}`); return; }
-    setSeedingCity(city);
-    setSeedProgress(0);
-    let count = 0;
-    for (let i = 0; i < staticImages.length; i++) {
-      try {
-        const response = await fetch(staticImages[i]);
-        const blob = await response.blob();
-        const path = `${city.toLowerCase()}/seed-${Date.now()}-${i}.jpg`;
-        const { error } = await supabase.storage.from(FEATURED_BUCKET).upload(path, blob, {
-          contentType: "image/jpeg",
-        });
-        if (error) { console.error("Upload error:", error); continue; }
-        const { data: urlData } = supabase.storage.from(FEATURED_BUCKET).getPublicUrl(path);
-        await supabase.from("featured_models").insert({
-          city,
-          location_name: city,
-          image_url: urlData.publicUrl,
-          display_order: i + 1,
-        });
-        count++;
-      } catch (err) {
-        console.error("Seed error:", err);
-      }
-      setSeedProgress(i + 1);
-    }
-    toast.success(`${count} model images imported for ${city}!`);
-    setSeedingCity(null);
-    await fetchModels();
-  };
+
 
   const grouped = CITIES.reduce((acc, city) => {
     acc[city] = models.filter((m) => m.location_name.toLowerCase() === city.toLowerCase());
