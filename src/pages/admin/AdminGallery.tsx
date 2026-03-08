@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import {
   Trash2, Upload, Eye, EyeOff, ArrowUp, ArrowDown,
-  ImageIcon, RefreshCw, X, AlertTriangle, GripVertical,
+  ImageIcon, RefreshCw, X, AlertTriangle,
 } from "lucide-react";
 
 type GalleryImage = {
