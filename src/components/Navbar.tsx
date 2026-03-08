@@ -65,31 +65,7 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Desktop nav */}
-      <nav className="hidden md:flex fixed top-5 left-1/2 -translate-x-1/2 z-[180] items-center gap-5 px-5 py-2.5 rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm shadow-luxury">
-        {navLinks.map((link) => {
-          const active = isActivePath(location.pathname, link.path);
-          return (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`group/link relative inline-flex items-center gap-2 font-elegant text-[12px] lg:text-[13px] tracking-wider transition-all duration-300 ${
-                active ? "text-primary" : "text-primary/50 hover:text-primary"
-              }`}
-            >
-              {active && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
-              <span>{link.label}</span>
-              <span
-                className={`absolute -bottom-1 left-0 h-[1px] bg-primary transition-all duration-300 ${
-                  active ? "w-full" : "w-0 group-hover/link:w-full"
-                }`}
-              />
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Mobile hamburger */}
+      {/* Hamburger button — works on both mobile and desktop */}
       <AnimatePresence>
         {showHamburger && (
           <motion.button
@@ -99,7 +75,7 @@ const Navbar = () => {
             exit={{ opacity: 0, scale: 0.75 }}
             transition={{ duration: 0.2 }}
             onClick={openMenu}
-            className="md:hidden fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
+            className="fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
             aria-label="Open menu"
           >
             <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
@@ -109,7 +85,7 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* Mobile overlay + panel */}
+      {/* Overlay + slide panel */}
       <AnimatePresence onExitComplete={() => setIsClosing(false)}>
         {isOpen && (
           <>
@@ -118,7 +94,7 @@ const Navbar = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden fixed inset-0 z-[190] bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 z-[190] bg-black/60 backdrop-blur-sm"
               onClick={closeMenu}
             />
 
@@ -127,7 +103,7 @@ const Navbar = () => {
               initial="closed"
               animate="open"
               exit="closed"
-              className="md:hidden fixed top-0 left-0 z-[195] h-full w-[300px] max-w-[85vw] flex flex-col px-8 pt-20 pb-8"
+              className="fixed top-0 left-0 z-[195] h-full w-[300px] max-w-[85vw] flex flex-col px-8 pt-20 pb-8"
               style={{
                 background:
                   "linear-gradient(180deg, hsl(158 65% 11%) 0%, hsl(156 62% 15%) 50%, hsl(158 65% 11%) 100%)",
