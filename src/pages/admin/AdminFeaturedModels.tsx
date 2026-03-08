@@ -123,7 +123,7 @@ const AdminFeaturedModels = () => {
     setUploadCurrent(0);
     setUploadProgress(0);
 
-    const cityModels = models.filter((m) => m.city.toLowerCase() === uploadCity.toLowerCase());
+    const cityModels = models.filter((m) => m.location_name.toLowerCase() === uploadCity.toLowerCase());
     let count = 0;
 
     for (let i = 0; i < previewFiles.length; i++) {
