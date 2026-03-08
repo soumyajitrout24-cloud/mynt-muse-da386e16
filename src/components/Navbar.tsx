@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { flushSync } from "react-dom";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -23,22 +24,17 @@ const isActivePath = (pathname: string, path: string) => {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const openMenu = useCallback(() => setIsOpen(true), []);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
-  const handleNavigate = useCallback(
-    (path: string) => {
-      setIsOpen(false);
-      navigate(path);
-    },
-    [navigate],
-  );
+  const handleNavItemClick = useCallback(() => {
+    flushSync(() => setIsOpen(false));
+  }, []);
 
   useEffect(() => {
     setIsOpen(false);
-  }, [location.key]);
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -117,9 +113,9 @@ const Navbar = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.08 + index * 0.03 }}
                     >
-                      <button
-                        type="button"
-                        onClick={() => handleNavigate(link.path)}
+                      <Link
+                        to={link.path}
+                        onClick={handleNavItemClick}
                         className={`group flex w-full items-center gap-3 py-2.5 text-left font-elegant tracking-wider transition-all duration-300 ${
                           active ? "pl-3 text-primary" : "text-primary/50 hover:pl-3 hover:text-primary"
                         }`}
@@ -133,7 +129,7 @@ const Navbar = () => {
                             }`}
                           />
                         </span>
-                      </button>
+                      </Link>
                     </motion.li>
                   );
                 })}
