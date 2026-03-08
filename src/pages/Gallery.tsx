@@ -1,7 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import FadeInSection from "@/components/FadeInSection";
 
+// Static imports as fallback
 import img111 from "@/assets/111.jpeg";
 import img112 from "@/assets/112.jpeg";
 import img113 from "@/assets/113.png";
@@ -23,7 +26,7 @@ import img128 from "@/assets/128.png";
 import img129 from "@/assets/129.png";
 import img130 from "@/assets/130.png";
 
-const images = [
+const fallbackImages = [
   img111, img112, img113, img114, img115, img116, img117, img118, img119, img120,
   img121, img122, img123, img124, img125, img126, img127, img128, img129, img130,
 ];
@@ -39,7 +42,6 @@ const watermarkImage = (src: string): Promise<string> =>
       canvas.height = img.height;
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(img, 0, 0);
-
       const text = "Mynt Girlfriend";
       const fontSize = Math.max(18, Math.floor(canvas.width / 10));
       ctx.font = `600 ${fontSize}px sans-serif`;
@@ -51,49 +53,49 @@ const watermarkImage = (src: string): Promise<string> =>
       ctx.rotate(-0.15);
       ctx.fillText(text, 0, 0);
       ctx.restore();
-
       resolve(canvas.toDataURL("image/jpeg", 0.85));
     };
     img.onerror = () => resolve(src);
   });
 
 const Gallery = () => {
-  const [wmImages, setWmImages] = useState<(string | null)[]>(
-    () => new Array(images.length).fill(null)
-  );
+  const { data: dbImages } = useQuery({
+    queryKey: ["gallery_images"],
+    queryFn: async () => {
+      const { data } = await supabase.from("gallery_images").select("image_url").order("display_order");
+      return data?.length ? data.map((d) => d.image_url) : null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 
-  const processImages = useCallback(async () => {
-    // Process all in parallel for speed
-    const promises = images.map((src, i) =>
-      watermarkImage(src).then((result) => {
-        setWmImages((prev) => {
-          const next = [...prev];
-          next[i] = result;
-          return next;
-        });
-      })
-    );
-    await Promise.all(promises);
-  }, []);
+  const images = dbImages || fallbackImages;
+
+  const [wmImages, setWmImages] = useState<(string | null)[]>([]);
 
   useEffect(() => {
-    processImages();
-  }, [processImages]);
+    setWmImages(new Array(images.length).fill(null));
+    const process = async () => {
+      const promises = images.map((src, i) =>
+        watermarkImage(src).then((result) => {
+          setWmImages((prev) => {
+            const next = [...prev];
+            next[i] = result;
+            return next;
+          });
+        })
+      );
+      await Promise.all(promises);
+    };
+    process();
+  }, [images]);
 
   return (
-    <div
-      className="bg-pink-page min-h-screen pt-24 pb-16 px-6"
-      onContextMenu={(e) => e.preventDefault()}
-    >
+    <div className="bg-pink-page min-h-screen pt-24 pb-16 px-6" onContextMenu={(e) => e.preventDefault()}>
       <div className="container mx-auto max-w-6xl">
         <FadeInSection>
           <div className="text-center mb-5 md:mb-6">
-            <p className="font-elegant text-xs md:text-sm tracking-[0.3em] uppercase text-emerald-dark/50 mb-3">
-              Our Portfolio
-            </p>
-            <h1 className="font-display text-3xl md:text-5xl tracking-wider text-emerald-dark">
-              Gallery & Profiles
-            </h1>
+            <p className="font-elegant text-xs md:text-sm tracking-[0.3em] uppercase text-emerald-dark/50 mb-3">Our Portfolio</p>
+            <h1 className="font-display text-3xl md:text-5xl tracking-wider text-emerald-dark">Gallery & Profiles</h1>
             <div className="h-[1px] w-20 mx-auto mt-4 bg-gradient-to-r from-transparent via-emerald-dark/40 to-transparent" />
           </div>
         </FadeInSection>
@@ -101,7 +103,7 @@ const Gallery = () => {
         <FadeInSection delay={0.1}>
           <div className="text-center mb-10 md:mb-12 max-w-2xl mx-auto">
             <p className="font-elegant text-sm md:text-base text-emerald-dark/50 leading-relaxed mb-2">
-              Explore our carefully curated portfolio of models — each verified and presented with true, unedited images and professional details.
+              Explore our carefully curated portfolio of models — each verified and presented with true, unedited images.
             </p>
             <p className="font-elegant text-sm md:text-base text-emerald-dark/50 leading-relaxed">
               No exaggerated claims, no filters — real profiles, real talent.
