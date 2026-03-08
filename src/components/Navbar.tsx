@@ -99,7 +99,7 @@ const Navbar = () => {
             exit={{ opacity: 0, scale: 0.75 }}
             transition={{ duration: 0.2 }}
             onClick={openMenu}
-            className="md:hidden fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
+            className="fixed top-5 left-5 z-[200] flex flex-col justify-center items-center w-11 h-11 gap-[5px] rounded-full border border-primary/20 bg-background/80 backdrop-blur-sm hover:border-primary/40 hover:scale-105 transition-all duration-300"
             aria-label="Open menu"
           >
             <span className="block h-[2px] w-5 rounded-full bg-primary transition-all duration-300" />
