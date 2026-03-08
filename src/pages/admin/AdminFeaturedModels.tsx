@@ -7,7 +7,7 @@ import {
   Trash2, Upload, X, AlertTriangle, ImageIcon, RefreshCw,
   ChevronDown, ChevronUp, Users,
 } from "lucide-react";
-
+import { Progress } from "@/components/ui/progress";
 
 type FeaturedModel = {
   id: string;
