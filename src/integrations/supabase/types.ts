@@ -59,6 +59,33 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_models: {
+        Row: {
+          city: string
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          is_active: boolean
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          is_active?: boolean
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
       gallery_images: {
         Row: {
           created_at: string
