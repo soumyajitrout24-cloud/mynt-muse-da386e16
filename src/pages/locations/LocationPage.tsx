@@ -61,7 +61,7 @@ const LocationPage = () => {
       const { data } = await supabase
         .from("featured_models")
         .select("image_url")
-        .ilike("city", cityLower)
+        .ilike("location_name", cityLower)
         .eq("is_active", true)
         .order("display_order");
       return data?.length ? data.map((d) => d.image_url) : null;

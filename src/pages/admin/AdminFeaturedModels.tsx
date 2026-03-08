@@ -369,7 +369,7 @@ const AdminFeaturedModels = () => {
               </div>
               <div>
                 <h3 className="font-display text-base text-primary">Delete Model Image?</h3>
-                <p className="text-xs text-primary/50 font-body mt-1">This will remove this image from the {deleteConfirm.city} featured models section.</p>
+                <p className="text-xs text-primary/50 font-body mt-1">This will remove this image from the {deleteConfirm.location_name} featured models section.</p>
               </div>
             </div>
             <div className="flex justify-center">

@@ -140,9 +140,10 @@ const AdminLocations = () => {
 
   const handleDeleteArea = async (id: string) => {
     setDeleteConfirm(null);
-    await supabase.from("locations").delete().eq("id", id);
+    const { error } = await supabase.from("locations").delete().eq("id", id);
+    if (error) return toast.error("Failed to delete area");
     toast.success("Area deleted");
-    fetchLocations();
+    await fetchLocations();
   };
 
   const handleDeleteCity = async (city: string) => {

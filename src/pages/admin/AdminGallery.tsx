@@ -165,8 +165,6 @@ const AdminGallery = () => {
       .filter(Boolean) as string[];
     if (paths.length) await supabase.storage.from(GALLERY_BUCKET).remove(paths);
     await supabase.from("gallery_images").delete().in("id", images.map((img) => img.id));
-      await supabase.from("gallery_images").delete().eq("id", img.id);
-    }
     toast.success("All images deleted");
     fetchImages();
   };
