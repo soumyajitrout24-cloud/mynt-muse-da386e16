@@ -5,8 +5,35 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import {
   Trash2, Upload, Eye, EyeOff, ArrowUp, ArrowDown,
-  ImageIcon, RefreshCw, X, AlertTriangle,
+  ImageIcon, RefreshCw, X, AlertTriangle, Download,
 } from "lucide-react";
+
+// Static gallery image imports
+import img111 from "@/assets/111.jpeg";
+import img112 from "@/assets/112.jpeg";
+import img113 from "@/assets/113.png";
+import img114 from "@/assets/114.png";
+import img115 from "@/assets/115.png";
+import img116 from "@/assets/116.png";
+import img117 from "@/assets/117.png";
+import img118 from "@/assets/118.png";
+import img119 from "@/assets/119.png";
+import img120 from "@/assets/120.png";
+import img121 from "@/assets/121.png";
+import img122 from "@/assets/122.png";
+import img123 from "@/assets/123.png";
+import img124 from "@/assets/124.png";
+import img125 from "@/assets/125.png";
+import img126 from "@/assets/126.png";
+import img127 from "@/assets/127.png";
+import img128 from "@/assets/128.png";
+import img129 from "@/assets/129.png";
+import img130 from "@/assets/130.png";
+
+const STATIC_GALLERY_IMAGES = [
+  img111, img112, img113, img114, img115, img116, img117, img118, img119, img120,
+  img121, img122, img123, img124, img125, img126, img127, img128, img129, img130,
+];
 
 type GalleryImage = {
   id: string;
@@ -41,6 +68,8 @@ const AdminGallery = () => {
   const [clearConfirm, setClearConfirm] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [previewFiles, setPreviewFiles] = useState<{ file: File; url: string }[]>([]);
+  const [seeding, setSeeding] = useState(false);
+  const [seedProgress, setSeedProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchImages = useCallback(async () => {
@@ -167,6 +196,37 @@ const AdminGallery = () => {
     await supabase.from("gallery_images").delete().in("id", images.map((img) => img.id));
     toast.success("All images deleted");
     fetchImages();
+  };
+
+  const seedStaticImages = async () => {
+    setSeeding(true);
+    setSeedProgress(0);
+    let count = 0;
+    for (let i = 0; i < STATIC_GALLERY_IMAGES.length; i++) {
+      const src = STATIC_GALLERY_IMAGES[i];
+      try {
+        const response = await fetch(src);
+        const blob = await response.blob();
+        const ext = src.includes(".jpeg") || src.includes(".jpg") ? "jpeg" : "png";
+        const path = `seed-${Date.now()}-${i}.${ext}`;
+        const { error } = await supabase.storage.from(GALLERY_BUCKET).upload(path, blob, {
+          contentType: `image/${ext}`,
+        });
+        if (error) { console.error("Upload error:", error); continue; }
+        const { data: urlData } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(path);
+        await supabase.from("gallery_images").insert({
+          image_url: urlData.publicUrl,
+          display_order: i + 1,
+        });
+        count++;
+      } catch (err) {
+        console.error("Seed error:", err);
+      }
+      setSeedProgress(i + 1);
+    }
+    toast.success(`${count} images imported successfully!`);
+    setSeeding(false);
+    await fetchImages();
   };
 
   if (loading)
@@ -306,10 +366,33 @@ const AdminGallery = () => {
 
       {/* Existing images grid */}
       {images.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-primary/20 rounded-xl">
-          <ImageIcon className="w-10 h-10 text-primary/20 mx-auto mb-3" />
-          <p className="text-primary/40 font-elegant text-sm">No images yet. Upload some to get started.</p>
-          <p className="text-primary/25 font-body text-[10px] mt-1">The website shows fallback images until you upload here.</p>
+        <div className="space-y-4">
+          <div className="bg-gold/5 border border-gold/20 rounded-xl p-4 sm:p-5 text-center space-y-3">
+            <ImageIcon className="w-10 h-10 text-gold/40 mx-auto" />
+            <div>
+              <p className="text-sm text-primary/60 font-body">
+                The website is currently showing <strong>20 built-in static images</strong> as fallbacks.
+              </p>
+              <p className="text-xs text-primary/40 font-body mt-1">
+                Click "Import Static Images" to add them to the database so you can manage, reorder, and delete them.
+              </p>
+            </div>
+            <Button
+              onClick={seedStaticImages}
+              disabled={seeding}
+              size="sm"
+              className="bg-gold text-emerald-dark hover:bg-gold/90 text-xs"
+            >
+              <Download className="w-3.5 h-3.5 mr-1.5" />
+              {seeding ? `Importing... (${seedProgress}/20)` : "Import Static Images"}
+            </Button>
+            {seeding && (
+              <Progress value={(seedProgress / 20) * 100} className="h-2 bg-primary/10 mt-2" />
+            )}
+          </div>
+          <div className="text-center py-8 border border-dashed border-primary/20 rounded-xl">
+            <p className="text-primary/30 font-body text-xs">Or upload your own images using the upload area above.</p>
+          </div>
         </div>
       ) : (
         <>
