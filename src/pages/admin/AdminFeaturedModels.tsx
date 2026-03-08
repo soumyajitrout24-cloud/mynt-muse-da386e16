@@ -374,9 +374,25 @@ const AdminFeaturedModels = () => {
                 </div>
 
                 {cityModels.length === 0 ? (
-                  <div className="px-4 py-6 text-center">
+                  <div className="px-4 py-6 text-center space-y-2">
                     <ImageIcon className="w-6 h-6 text-primary/15 mx-auto mb-1" />
                     <p className="text-[11px] text-primary/30 font-body">No model images yet for {city}</p>
+                    {(STATIC_CITY_IMAGES[city]?.length || 0) > 0 && (
+                      <Button
+                        onClick={() => seedCityImages(city)}
+                        disabled={seedingCity === city}
+                        size="sm"
+                        className="bg-gold text-emerald-dark hover:bg-gold/90 text-[10px] h-7"
+                      >
+                        <Download className="w-3 h-3 mr-1" />
+                        {seedingCity === city
+                          ? `Importing... (${seedProgress}/${STATIC_CITY_IMAGES[city].length})`
+                          : `Import ${STATIC_CITY_IMAGES[city].length} Static Images`}
+                      </Button>
+                    )}
+                    {seedingCity === city && (
+                      <Progress value={(seedProgress / (STATIC_CITY_IMAGES[city]?.length || 1)) * 100} className="h-1.5 bg-primary/10 max-w-xs mx-auto" />
+                    )}
                   </div>
                 ) : (
                   <div className="p-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
