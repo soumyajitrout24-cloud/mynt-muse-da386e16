@@ -134,12 +134,13 @@ const AdminFeaturedModels = () => {
       setUploadCurrent(i + 1);
       setUploadProgress(Math.round((i / previewFiles.length) * 100));
 
-      const { error } = await supabase.storage.from("gallery").upload(path, file);
+      const { error } = await supabase.storage.from(FEATURED_BUCKET).upload(path, file);
       if (error) { toast.error(`Failed: ${file.name}`); continue; }
 
-      const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(path);
+      const { data: urlData } = supabase.storage.from(FEATURED_BUCKET).getPublicUrl(path);
       await supabase.from("featured_models").insert({
         city: uploadCity,
+        location_name: uploadCity,
         image_url: urlData.publicUrl,
         display_order: cityModels.length + count + 1,
       });
