@@ -5,8 +5,23 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import {
   Trash2, Upload, X, AlertTriangle, ImageIcon, RefreshCw,
-  ChevronDown, ChevronUp, Users,
+  ChevronDown, ChevronUp, Users, Download,
 } from "lucide-react";
+
+// Static location images
+import b1 from "@/assets/b1.jpg"; import b2 from "@/assets/b2.jpg"; import b3 from "@/assets/b3.jpg"; import b4 from "@/assets/b4.jpg";
+import b5 from "@/assets/b5.jpg"; import b6 from "@/assets/b6.jpg"; import b7 from "@/assets/b7.jpg"; import b8 from "@/assets/b8.jpg";
+import c1 from "@/assets/c1.jpg"; import c2 from "@/assets/c2.jpg"; import c3 from "@/assets/c3.jpg"; import c4 from "@/assets/c4.jpg";
+import c5 from "@/assets/c5.jpg"; import c6 from "@/assets/c6.jpg"; import c7 from "@/assets/c7.jpg"; import c8 from "@/assets/c8.jpg";
+import h1 from "@/assets/h1.jpg"; import h2 from "@/assets/h2.jpg";
+
+const STATIC_CITY_IMAGES: Record<string, string[]> = {
+  Bangalore: [b1, b2, b3, b4, b5, b6, b7, b8],
+  Chennai: [c1, c2, c3, c4, c5, c6, c7, c8],
+  Hyderabad: [h1, h2],
+  Mumbai: [],
+  Nashik: [],
+};
 
 type FeaturedModel = {
   id: string;
