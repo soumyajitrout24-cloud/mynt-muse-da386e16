@@ -198,6 +198,37 @@ const AdminGallery = () => {
     fetchImages();
   };
 
+  const seedStaticImages = async () => {
+    setSeeding(true);
+    setSeedProgress(0);
+    let count = 0;
+    for (let i = 0; i < STATIC_GALLERY_IMAGES.length; i++) {
+      const src = STATIC_GALLERY_IMAGES[i];
+      try {
+        const response = await fetch(src);
+        const blob = await response.blob();
+        const ext = src.includes(".jpeg") || src.includes(".jpg") ? "jpeg" : "png";
+        const path = `seed-${Date.now()}-${i}.${ext}`;
+        const { error } = await supabase.storage.from(GALLERY_BUCKET).upload(path, blob, {
+          contentType: `image/${ext}`,
+        });
+        if (error) { console.error("Upload error:", error); continue; }
+        const { data: urlData } = supabase.storage.from(GALLERY_BUCKET).getPublicUrl(path);
+        await supabase.from("gallery_images").insert({
+          image_url: urlData.publicUrl,
+          display_order: i + 1,
+        });
+        count++;
+      } catch (err) {
+        console.error("Seed error:", err);
+      }
+      setSeedProgress(i + 1);
+    }
+    toast.success(`${count} images imported successfully!`);
+    setSeeding(false);
+    await fetchImages();
+  };
+
   if (loading)
     return (
       <div className="flex items-center justify-center py-16">
