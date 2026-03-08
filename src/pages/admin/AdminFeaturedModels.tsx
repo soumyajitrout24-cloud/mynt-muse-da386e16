@@ -1,27 +1,13 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+
 import { toast } from "sonner";
 import {
   Trash2, Upload, X, AlertTriangle, ImageIcon, RefreshCw,
-  ChevronDown, ChevronUp, Users, Download,
+  ChevronDown, ChevronUp, Users,
 } from "lucide-react";
-
-// Static location images
-import b1 from "@/assets/b1.jpg"; import b2 from "@/assets/b2.jpg"; import b3 from "@/assets/b3.jpg"; import b4 from "@/assets/b4.jpg";
-import b5 from "@/assets/b5.jpg"; import b6 from "@/assets/b6.jpg"; import b7 from "@/assets/b7.jpg"; import b8 from "@/assets/b8.jpg";
-import c1 from "@/assets/c1.jpg"; import c2 from "@/assets/c2.jpg"; import c3 from "@/assets/c3.jpg"; import c4 from "@/assets/c4.jpg";
-import c5 from "@/assets/c5.jpg"; import c6 from "@/assets/c6.jpg"; import c7 from "@/assets/c7.jpg"; import c8 from "@/assets/c8.jpg";
-import h1 from "@/assets/h1.jpg"; import h2 from "@/assets/h2.jpg";
-
-const STATIC_CITY_IMAGES: Record<string, string[]> = {
-  Bangalore: [b1, b2, b3, b4, b5, b6, b7, b8],
-  Chennai: [c1, c2, c3, c4, c5, c6, c7, c8],
-  Hyderabad: [h1, h2],
-  Mumbai: [],
-  Nashik: [],
-};
+import { Progress } from "@/components/ui/progress";
 
 type FeaturedModel = {
   id: string;
@@ -61,8 +47,8 @@ const AdminFeaturedModels = () => {
   const [expandedCities, setExpandedCities] = useState<Record<string, boolean>>({});
   const [previewFiles, setPreviewFiles] = useState<{ file: File; url: string }[]>([]);
   const [dragOverCity, setDragOverCity] = useState<string | null>(null);
-  const [seedingCity, setSeedingCity] = useState<string | null>(null);
-  const [seedProgress, setSeedProgress] = useState(0);
+
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchModels = useCallback(async () => {
@@ -187,38 +173,7 @@ const AdminFeaturedModels = () => {
     fetchModels();
   };
 
-  const seedCityImages = async (city: string) => {
-    const staticImages = STATIC_CITY_IMAGES[city] || [];
-    if (!staticImages.length) { toast.error(`No static images available for ${city}`); return; }
-    setSeedingCity(city);
-    setSeedProgress(0);
-    let count = 0;
-    for (let i = 0; i < staticImages.length; i++) {
-      try {
-        const response = await fetch(staticImages[i]);
-        const blob = await response.blob();
-        const path = `${city.toLowerCase()}/seed-${Date.now()}-${i}.jpg`;
-        const { error } = await supabase.storage.from(FEATURED_BUCKET).upload(path, blob, {
-          contentType: "image/jpeg",
-        });
-        if (error) { console.error("Upload error:", error); continue; }
-        const { data: urlData } = supabase.storage.from(FEATURED_BUCKET).getPublicUrl(path);
-        await supabase.from("featured_models").insert({
-          city,
-          location_name: city,
-          image_url: urlData.publicUrl,
-          display_order: i + 1,
-        });
-        count++;
-      } catch (err) {
-        console.error("Seed error:", err);
-      }
-      setSeedProgress(i + 1);
-    }
-    toast.success(`${count} model images imported for ${city}!`);
-    setSeedingCity(null);
-    await fetchModels();
-  };
+
 
   const grouped = CITIES.reduce((acc, city) => {
     acc[city] = models.filter((m) => m.location_name.toLowerCase() === city.toLowerCase());
@@ -376,23 +331,7 @@ const AdminFeaturedModels = () => {
                 {cityModels.length === 0 ? (
                   <div className="px-4 py-6 text-center space-y-2">
                     <ImageIcon className="w-6 h-6 text-primary/15 mx-auto mb-1" />
-                    <p className="text-[11px] text-primary/30 font-body">No model images yet for {city}</p>
-                    {(STATIC_CITY_IMAGES[city]?.length || 0) > 0 && (
-                      <Button
-                        onClick={() => seedCityImages(city)}
-                        disabled={seedingCity === city}
-                        size="sm"
-                        className="bg-gold text-emerald-dark hover:bg-gold/90 text-[10px] h-7"
-                      >
-                        <Download className="w-3 h-3 mr-1" />
-                        {seedingCity === city
-                          ? `Importing... (${seedProgress}/${STATIC_CITY_IMAGES[city].length})`
-                          : `Import ${STATIC_CITY_IMAGES[city].length} Static Images`}
-                      </Button>
-                    )}
-                    {seedingCity === city && (
-                      <Progress value={(seedProgress / (STATIC_CITY_IMAGES[city]?.length || 1)) * 100} className="h-1.5 bg-primary/10 max-w-xs mx-auto" />
-                    )}
+                    <p className="text-[11px] text-primary/30 font-body">No model images yet for {city}. Use the upload area above to add featured model images.</p>
                   </div>
                 ) : (
                   <div className="p-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
