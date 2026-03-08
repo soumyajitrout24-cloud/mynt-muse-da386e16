@@ -52,7 +52,7 @@ const AdminFeaturedModels = () => {
     const { data } = await supabase
       .from("featured_models")
       .select("*")
-      .order("city")
+      .order("location_name")
       .order("display_order");
     setModels(data || []);
     setLoading(false);
