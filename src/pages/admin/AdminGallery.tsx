@@ -15,6 +15,20 @@ type GalleryImage = {
   is_active: boolean;
 };
 
+const GALLERY_BUCKET = "gallery-images";
+
+const extractStoragePath = (publicUrl: string, bucket: string) => {
+  try {
+    const url = new URL(publicUrl);
+    const marker = `/object/public/${bucket}/`;
+    const idx = url.pathname.indexOf(marker);
+    if (idx === -1) return null;
+    return decodeURIComponent(url.pathname.slice(idx + marker.length));
+  } catch {
+    return null;
+  }
+};
+
 const AdminGallery = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [uploading, setUploading] = useState(false);

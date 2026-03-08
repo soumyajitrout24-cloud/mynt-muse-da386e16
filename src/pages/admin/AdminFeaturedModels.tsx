@@ -11,6 +11,7 @@ import {
 type FeaturedModel = {
   id: string;
   city: string;
+  location_name: string;
   image_url: string;
   display_order: number;
   is_active: boolean;
