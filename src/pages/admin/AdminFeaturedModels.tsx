@@ -129,7 +129,7 @@ const AdminFeaturedModels = () => {
     for (let i = 0; i < previewFiles.length; i++) {
       const { file } = previewFiles[i];
       const ext = file.name.split(".").pop();
-      const path = `featured/${uploadCity.toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const path = `${uploadCity.toLowerCase()}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
       setUploadCurrent(i + 1);
       setUploadProgress(Math.round((i / previewFiles.length) * 100));
