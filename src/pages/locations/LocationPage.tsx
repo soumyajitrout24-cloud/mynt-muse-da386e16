@@ -14,6 +14,7 @@ const LocationPage = () => {
   const { city } = useParams();
   const cityLower = city?.toLowerCase() || "";
   const normalizedCity = CITY_ALIASES[cityLower] || cityLower;
+  const displayCity = normalizedCity ? normalizedCity.charAt(0).toUpperCase() + normalizedCity.slice(1) : "";
 
   // Fetch locations from DB
   const { data: dbLocations, isLoading } = useQuery({
