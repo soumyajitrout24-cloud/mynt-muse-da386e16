@@ -9,6 +9,9 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -39,6 +42,24 @@ const AdminLogin = () => {
     navigate("/admin/dashboard");
     setLoading(false);
   };
+
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail) return;
+    setResetLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setResetLoading(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Recovery link sent! Check your inbox.");
+      setResetOpen(false);
+      setResetEmail("");
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-emerald-gradient flex items-center justify-center px-4">
@@ -78,9 +99,51 @@ const AdminLogin = () => {
         >
           {loading ? "Signing in..." : "Sign In"}
         </Button>
+
+        {!resetOpen ? (
+          <button
+            type="button"
+            onClick={() => { setResetOpen(true); setResetEmail(email); }}
+            className="w-full text-center text-xs text-primary/60 hover:text-gold tracking-wide"
+          >
+            Forgot password?
+          </button>
+        ) : (
+          <div className="space-y-3 pt-2 border-t border-primary/10">
+            <p className="text-xs text-primary/60 font-body text-center">
+              Enter your admin email to receive a recovery link.
+            </p>
+            <Input
+              type="email"
+              placeholder="Admin email"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              className="bg-background/50 border-primary/20 text-primary placeholder:text-primary/30"
+            />
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={handleReset}
+                disabled={resetLoading}
+                className="flex-1 bg-gold text-emerald-dark hover:bg-gold/90 text-xs"
+              >
+                {resetLoading ? "Sending..." : "Send recovery link"}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setResetOpen(false)}
+                className="text-primary/60 text-xs"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
       </form>
     </div>
   );
 };
+
 
 export default AdminLogin;

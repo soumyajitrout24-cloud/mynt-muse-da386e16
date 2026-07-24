@@ -26,6 +26,8 @@ const LocationPage = lazy(() => import("./pages/locations/LocationPage"));
 
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+
 
 const queryClient = new QueryClient();
 
@@ -78,6 +80,8 @@ function App() {
               {/* Admin routes - no Navbar/Footer */}
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+
 
               {/* Public routes */}
               <Route path="*" element={
