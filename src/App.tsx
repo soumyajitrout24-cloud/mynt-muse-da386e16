@@ -26,6 +26,8 @@ const LocationPage = lazy(() => import("./pages/locations/LocationPage"));
 
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+
 
 const queryClient = new QueryClient();
 
