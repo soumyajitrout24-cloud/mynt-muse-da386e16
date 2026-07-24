@@ -80,6 +80,8 @@ function App() {
               {/* Admin routes - no Navbar/Footer */}
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+
 
               {/* Public routes */}
               <Route path="*" element={
