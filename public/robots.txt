@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.myntgirlfriend.in/sitemap.xml
