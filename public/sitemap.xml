@@ -2,29 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.myntgirlfriend.in/</loc>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/about</loc>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/services</loc>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/gallery</loc>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/pricing</loc>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/testimonials</loc>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/contact</loc>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/faq</loc>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.myntgirlfriend.in/booking-policy</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.myntgirlfriend.in/locations/bangalore</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.myntgirlfriend.in/locations/chennai</loc>
+    <priority>0.9</priority>
   </url>
 </urlset>

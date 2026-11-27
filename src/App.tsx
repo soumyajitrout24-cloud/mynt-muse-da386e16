@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense, useState, useEffect } from "react";
 
 import Navbar from "@/components/Navbar";
@@ -10,6 +10,8 @@ import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
 import ScrollToTop from "@/components/ScrollToTop";
+import Seo from "@/components/Seo";
+import { ROUTE_SEO, ORG_JSONLD } from "@/lib/seoData";
 
 // Lazy load pages for performance
 const Index = lazy(() => import("./pages/Index"));
@@ -30,6 +32,14 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 
 const queryClient = new QueryClient();
+
+const RouteSeo = () => {
+  const { pathname } = useLocation();
+  const clean = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
+  const meta = ROUTE_SEO[clean];
+  if (!meta) return null; // location pages and others set their own SEO
+  return <Seo title={meta.title} description={meta.description} path={clean} jsonLd={clean === "/" ? ORG_JSONLD : undefined} />;
+};
 
 const PageLoader = () => (
   <div className="min-h-screen bg-emerald-gradient flex items-center justify-center">
@@ -86,6 +96,7 @@ function App() {
               {/* Public routes */}
               <Route path="*" element={
                 <>
+                  <RouteSeo />
                   <Navbar />
                   <Routes>
                     <Route path="/" element={<Index />} />

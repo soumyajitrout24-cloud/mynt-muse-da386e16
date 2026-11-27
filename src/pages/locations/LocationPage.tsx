@@ -5,6 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { locationData } from "../../lib/locationData";
 import FadeInSection from "@/components/FadeInSection";
+import Seo from "@/components/Seo";
+import { CITY_SEO } from "../../lib/locationSeo";
+import { ORG_JSONLD, SITE_URL } from "../../lib/seoData";
 
 import img111 from "@/assets/111.jpeg";
 import img112 from "@/assets/112.jpeg";
@@ -87,6 +90,8 @@ const LocationPage = () => {
     return locationData[normalizedCity] || null;
   }, [dbLocations, normalizedCity]);
 
+  const seo = CITY_SEO[normalizedCity];
+
   const randomModels = useMemo(() => {
     const fallback = FEATURED_FALLBACK_BY_CITY[normalizedCity] || [];
     const unique = Array.from(new Set([...(featuredModelImages || []), ...fallback]));
@@ -118,16 +123,41 @@ const LocationPage = () => {
 
   return (
     <div className="min-h-screen bg-emerald-gradient pt-24 pb-16 px-4 sm:px-6">
+      {seo && (
+        <Seo
+          title={seo.title}
+          description={seo.description}
+          path={`/locations/${normalizedCity}`}
+          jsonLd={[
+            { ...ORG_JSONLD, "@id": `${SITE_URL}/locations/${normalizedCity}#service`, name: `MYNT Model Agency ${seo.displayName}`, areaServed: { "@type": "City", name: seo.displayName } },
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: seo.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+            },
+          ]}
+        />
+      )}
       <div className="max-w-6xl mx-auto">
         <FadeInSection>
           <div className="text-center mb-12">
             <p className="font-elegant text-xs tracking-[0.3em] uppercase text-primary/50 mb-3">Explore</p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl text-primary uppercase tracking-wider font-display">
-              {displayCity}
+              {seo ? seo.h1 : displayCity}
             </h1>
             <div className="gold-divider w-20 mx-auto mt-4" />
           </div>
         </FadeInSection>
+
+        {seo && (
+          <FadeInSection delay={0.05}>
+            <div className="max-w-3xl mx-auto text-center mb-14 space-y-4">
+              {seo.intro.map((p, i) => (
+                <p key={i} className="font-elegant text-sm md:text-base text-primary/60 leading-relaxed">{p}</p>
+              ))}
+            </div>
+          </FadeInSection>
+        )}
 
         {randomModels.length > 0 && (
           <FadeInSection delay={0.1}>
@@ -141,7 +171,7 @@ const LocationPage = () => {
                     key={`${displayCity}-${index}`}
                     className="relative w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-primary/30 shadow-luxury"
                   >
-                    <img src={img} alt={`${displayCity} featured model ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                    <img src={img} alt={`Professional model available for events in ${displayCity} – portfolio ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                       <span className="text-white/70 text-xs sm:text-sm font-semibold tracking-wider rotate-[-20deg]">
                         MyntGirlfriend
@@ -161,7 +191,7 @@ const LocationPage = () => {
                 {area.image ? (
                   <img
                     src={area.image}
-                    alt={area.name}
+                    alt={`${area.name}, ${displayCity} – event and model coverage area`}
                     className="w-full h-52 sm:h-64 object-cover transition duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
@@ -181,6 +211,46 @@ const LocationPage = () => {
             </FadeInSection>
           ))}
         </div>
+
+        {seo && (
+          <>
+            <FadeInSection>
+              <p className="text-center font-elegant text-sm text-primary/55 max-w-3xl mx-auto mt-10">{seo.neighborhoodsNote}</p>
+            </FadeInSection>
+
+            <FadeInSection>
+              <section className="mt-16">
+                <h2 className="text-center font-display text-xl md:text-2xl text-primary tracking-wider mb-8">
+                  Our Services in {seo.displayName}
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
+                  {seo.eventTypes.map((e) => (
+                    <div key={e.title} className="gold-border-card rounded-xl bg-card p-5">
+                      <h3 className="font-display text-base md:text-lg text-primary mb-2">{e.title}</h3>
+                      <p className="font-elegant text-sm text-primary/55 leading-relaxed">{e.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </FadeInSection>
+
+            <FadeInSection>
+              <section className="mt-16 max-w-3xl mx-auto">
+                <h2 className="text-center font-display text-xl md:text-2xl text-primary tracking-wider mb-8">
+                  {seo.displayName} Booking FAQs
+                </h2>
+                <div className="space-y-4">
+                  {seo.faqs.map((f) => (
+                    <div key={f.q} className="gold-border-card rounded-xl bg-card p-5">
+                      <h3 className="font-display text-base text-primary mb-2">{f.q}</h3>
+                      <p className="font-elegant text-sm text-primary/55 leading-relaxed">{f.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </FadeInSection>
+          </>
+        )}
       </div>
     </div>
   );
